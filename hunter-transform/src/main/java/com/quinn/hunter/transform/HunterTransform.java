@@ -83,15 +83,13 @@ public class HunterTransform extends Transform {
                    TransformOutputProvider outputProvider,
                    boolean isIncremental) throws IOException, TransformException, InterruptedException {
         RunVariant runVariant = getRunVariant();
-        boolean printResultEnabled = isPrintResultEnabled();
         if("debug".equals(context.getVariantName())) {
             emptyRun = runVariant == RunVariant.RELEASE || runVariant == RunVariant.NEVER;
         } else if("release".equals(context.getVariantName())) {
             emptyRun = runVariant == RunVariant.DEBUG || runVariant == RunVariant.NEVER;
         }
         logger.warn(getName() + " isIncremental = " + isIncremental + ", runVariant = "
-                + runVariant + ", emptyRun = " + emptyRun + ", inDuplcatedClassSafeMode = " + inDuplcatedClassSafeMode()
-        + ", printResult = " + printResultEnabled);
+                + runVariant + ", emptyRun = " + emptyRun + ", inDuplcatedClassSafeMode = " + inDuplcatedClassSafeMode());
         long startTime = System.currentTimeMillis();
         if(!isIncremental) {
             outputProvider.deleteAll();
@@ -249,10 +247,6 @@ public class HunterTransform extends Transform {
 
     protected RunVariant getRunVariant() {
         return RunVariant.ALWAYS;
-    }
-
-    protected boolean isPrintResultEnabled() {
-        return true;
     }
 
     protected boolean inDuplcatedClassSafeMode(){

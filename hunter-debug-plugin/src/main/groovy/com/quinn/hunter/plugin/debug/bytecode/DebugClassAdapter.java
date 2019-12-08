@@ -1,12 +1,9 @@
 package com.quinn.hunter.plugin.debug.bytecode;
 
-import com.android.build.gradle.internal.LoggerWrapper;
-
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,29 +11,26 @@ import java.util.Map;
 /**
  * Created by Quinn on 16/09/2018.
  */
-public final class DebugClassAdapter extends ClassVisitor{
+public final class DebugClassAdapter extends ClassVisitor {
 
     private Map<String, List<Parameter>> methodParametersMap;
     private DebugMethodAdapter debugMethodAdapter;
     private String className;
 
-    private List<String> includeMethods = new ArrayList<String>();
-    private List<String> implMethods = new ArrayList<>();
-    private boolean debugResult = true;
+    private HashMap<String, MethodDataHolder> includeMethods = new HashMap<>();
+    private HashMap<String, MethodDataHolder> implMethods = new HashMap<>();
 
     DebugClassAdapter(final ClassVisitor cv, final Map<String, List<Parameter>> methodParametersMap) {
         super(Opcodes.ASM5, cv);
         this.methodParametersMap = methodParametersMap;
     }
 
-    public void setDebugResult(boolean value) {
-        this.debugResult = value;
+    public void attachIncludeMethodsAndImplMethods(
+        HashMap<String, MethodDataHolder> includeMethods, HashMap<String, MethodDataHolder> implMethods) {
+        this.includeMethods.putAll(includeMethods);
+        this.implMethods.putAll(implMethods);
     }
 
-    public void attachIncludeMethodsAndImplMethods(List<String> includeMethods,List<String> implMethods){
-        this.includeMethods.addAll(includeMethods);
-        this.implMethods.addAll(implMethods);
-    }
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
@@ -44,15 +38,19 @@ public final class DebugClassAdapter extends ClassVisitor{
     }
 
     @Override
-    public MethodVisitor visitMethod(final int access, final String name,
-                                     final String desc, final String signature, final String[] exceptions) {
+    public MethodVisitor visitMethod(
+        final int access, final String name,
+        final String desc, final String signature, final String[] exceptions) {
 
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
-        if(includeMethods.contains(name)){
+
+        final MethodDataHolder method = includeMethods.get(name + desc);
+
+        if (null != method) {
             String methodUniqueKey = name + desc;
-            debugMethodAdapter = new DebugMethodAdapter(className, methodParametersMap.get(methodUniqueKey), name, access, desc, mv);
-            debugMethodAdapter.setDebugResult(debugResult);
-            if(implMethods.contains(name)){
+            debugMethodAdapter =
+                new DebugMethodAdapter(className, methodParametersMap.get(methodUniqueKey), method, access, desc, mv);
+            if (implMethods.get(name + desc) != null) {
                 debugMethodAdapter.switchToDebugImpl();
             }
             return debugMethodAdapter;

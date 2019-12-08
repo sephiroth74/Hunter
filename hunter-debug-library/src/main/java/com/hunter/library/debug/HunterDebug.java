@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR}) @Retention(RetentionPolicy.CLASS)
 public @interface HunterDebug {
-    boolean debugResult() default true;
+    boolean debugResult() default false;
 }

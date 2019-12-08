@@ -32,18 +32,11 @@ public class DebugHunterTransform extends HunterTransform {
     public void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs, TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
         debugHunterExtension = (DebugHunterExtension) project.getExtensions().getByName("debugHunterExt");
         super.transform(context, inputs, referencedInputs, outputProvider, isIncremental);
-        System.out.println("hunterExt.printResult = " + debugHunterExtension.printResult);
-        ((DebugWeaver)this.bytecodeWeaver).setDebugResult(debugHunterExtension.printResult);
     }
 
     @Override
     protected RunVariant getRunVariant() {
         return debugHunterExtension.runVariant;
-    }
-
-    @Override
-    protected boolean isPrintResultEnabled() {
-        return debugHunterExtension.printResult;
     }
 
     @Override

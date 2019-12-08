@@ -3,8 +3,8 @@ apply plugin: 'groovy'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation 'com.android.tools.build:gradle:3.1.4'
-    implementation 'com.android.tools.build:gradle-api:3.1.4'
+    implementation 'com.android.tools.build:gradle:3.5.3'
+    implementation 'com.android.tools.build:gradle-api:3.5.3'
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.10'
     //noinspection GradleDependency
@@ -14,7 +14,8 @@ dependencies {
     //noinspection GradleDependency
     implementation 'org.ow2.asm:asm-commons:5.1'
 //    implementation 'com.quinn.hunter:hunter-transform:0.9.3'
-    implementation 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
+//    implementation 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
+    implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
 }
 
 repositories {

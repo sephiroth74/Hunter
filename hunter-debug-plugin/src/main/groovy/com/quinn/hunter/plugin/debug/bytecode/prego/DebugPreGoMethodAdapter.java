@@ -1,5 +1,7 @@
 package com.quinn.hunter.plugin.debug.bytecode.prego;
 
+import com.android.build.gradle.internal.LoggerWrapper;
+import com.quinn.hunter.plugin.debug.bytecode.MethodDataHolder;
 import com.quinn.hunter.plugin.debug.bytecode.Parameter;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -16,20 +18,22 @@ import java.util.Map;
  * Created by Quinn on 19/09/2018.
  */
 public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
+    private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugPreGoMethodAdapter.class);
 
     private Map<String, List<Parameter>> methodParametersMap;
     private List<Parameter> parameters = new ArrayList<>();
     private String methodKey;
-    private boolean needParameter = false;;
+    private boolean needParameter = false;
     private List<Label> labelList = new ArrayList<>();
     private DebugPreGoClassAdapter.MethodCollector methodCollector;
-    private String methodName;
+    private final MethodDataHolder method;
     private boolean useImpl = false;
 
-
-    public DebugPreGoMethodAdapter(String methodName,String methodKey, Map<String, List<Parameter>> methodParametersMap, MethodVisitor mv, boolean needParameter, DebugPreGoClassAdapter.MethodCollector methodCollector) {
+    public DebugPreGoMethodAdapter(
+        MethodDataHolder method, String methodKey, Map<String, List<Parameter>> methodParametersMap, MethodVisitor mv,
+        boolean needParameter, DebugPreGoClassAdapter.MethodCollector methodCollector) {
         super(Opcodes.ASM5, mv);
-        this.methodName = methodName;
+        this.method = method;
         this.methodKey = methodKey;
         this.methodParametersMap = methodParametersMap;
         this.needParameter = needParameter;
@@ -38,23 +42,28 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+
         AnnotationVisitor defaultAv = super.visitAnnotation(desc, visible);
-        if("Lcom/hunter/library/debug/HunterDebugSkip;".equals(desc) ) {
+        DebugPreGoAnnotationAdapter adapter = null;
+
+        if ("Lcom/hunter/library/debug/HunterDebugSkip;".equals(desc)) {
             needParameter = false;
-        }else if("Lcom/hunter/library/debug/HunterDebugImpl;".equals(desc)){
+        } else if ("Lcom/hunter/library/debug/HunterDebugImpl;".equals(desc)) {
             needParameter = true;
             useImpl = true;
-        }else if("Lcom/hunter/library/debug/HunterDebug;".equals(desc)){
+        } else if ("Lcom/hunter/library/debug/HunterDebug;".equals(desc)) {
+            adapter = new DebugPreGoAnnotationAdapter(this.method, defaultAv);
             needParameter = true;
         }
-        return defaultAv;
+
+        return adapter != null ? adapter : defaultAv;
     }
 
     @Override
     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-        if(!"this".equals(name) && start == labelList.get(0) && needParameter) {
+        if (!"this".equals(name) && start == labelList.get(0) && needParameter) {
             Type type = Type.getType(desc);
-            if(type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
+            if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
                 parameters.add(new Parameter(name, "Ljava/lang/Object;", index));
             } else {
                 parameters.add(new Parameter(name, desc, index));
@@ -65,8 +74,8 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
 
     @Override
     public void visitEnd() {
-        if(needParameter){
-            methodCollector.onIncludeMethod(methodName,useImpl);
+        if (needParameter) {
+            methodCollector.onIncludeMethod(method, useImpl);
         }
         methodParametersMap.put(methodKey, parameters);
         super.visitEnd();
@@ -77,6 +86,5 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
         labelList.add(label);
         super.visitLabel(label);
     }
-
 
 }

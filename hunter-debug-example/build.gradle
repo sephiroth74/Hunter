@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.quinn.hunter.debug"
         minSdkVersion 15
@@ -26,15 +25,18 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.aar'], dir: "$rootDir/hunter-debug-library/build/outputs/aar")
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.quinn.hunter:hunter-debug-library:1.0.0-SNAPSHOT'
+//    implementation 'com.quinn.hunter:hunter-debug-library:1.0.0-SNAPSHOT'
     implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation(name: 'hunter-debug-library-debug', ext: 'aar')
 }
 
 repositories {
     jcenter()
     google()
     mavenLocal()
+    flatDir { dir "$rootDir/hunter-debug-library/build/outputs/aar" }
 }
 
 buildscript {
@@ -43,9 +45,12 @@ buildscript {
         google()
         mavenLocal()
     }
+
     dependencies {
-        classpath 'com.quinn.hunter:hunter-debug-plugin:1.0.0-SNAPSHOT'
-        classpath 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
+//        classpath 'com.quinn.hunter:hunter-debug-plugin:1.0.0-SNAPSHOT'
+//        classpath 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
+        classpath fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
+        classpath fileTree(include: ['*.jar'], dir: "$rootDir/hunter-debug-plugin/build/libs")
     }
 }
 
@@ -53,6 +58,5 @@ buildscript {
 apply plugin: 'hunter-debug'
 
 debugHunterExt {
-    runVariant = 'DEBUG'
-    printResult = false
+    runVariant = 'RELEASE'
 }
