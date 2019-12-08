@@ -22,10 +22,15 @@ public final class DebugClassAdapter extends ClassVisitor{
 
     private List<String> includeMethods = new ArrayList<String>();
     private List<String> implMethods = new ArrayList<>();
+    private boolean debugResult = true;
 
     DebugClassAdapter(final ClassVisitor cv, final Map<String, List<Parameter>> methodParametersMap) {
         super(Opcodes.ASM5, cv);
         this.methodParametersMap = methodParametersMap;
+    }
+
+    public void setDebugResult(boolean value) {
+        this.debugResult = value;
     }
 
     public void attachIncludeMethodsAndImplMethods(List<String> includeMethods,List<String> implMethods){
@@ -46,6 +51,7 @@ public final class DebugClassAdapter extends ClassVisitor{
         if(includeMethods.contains(name)){
             String methodUniqueKey = name + desc;
             debugMethodAdapter = new DebugMethodAdapter(className, methodParametersMap.get(methodUniqueKey), name, access, desc, mv);
+            debugMethodAdapter.setDebugResult(debugResult);
             if(implMethods.contains(name)){
                 debugMethodAdapter.switchToDebugImpl();
             }

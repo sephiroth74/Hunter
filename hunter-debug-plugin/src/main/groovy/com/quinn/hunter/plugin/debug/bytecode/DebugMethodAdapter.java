@@ -17,6 +17,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
     private String className;
     private String methodName;
     private boolean debugMethod = true;
+    private boolean debugResult = true;
     private boolean debugMethodWithCustomLogger = false;
     private int timingStartVarIndex;
     private String methodDesc;
@@ -34,6 +35,9 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
         this.methodDesc = desc;
     }
 
+    public void setDebugResult(boolean value) {
+        this.debugResult = value;
+    }
 
     public void switchToDebugImpl(){
         debugMethod = false;
@@ -95,7 +99,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
 
     @Override
     public void visitInsn(int opcode) {
-        if ((debugMethod || debugMethodWithCustomLogger) && ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW)) {
+        if (debugResult && (debugMethod || debugMethodWithCustomLogger) && ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW)) {
             Type returnType = Type.getReturnType(methodDesc);
             String returnDesc = methodDesc.substring(methodDesc.indexOf(")") + 1);
             if(returnDesc.startsWith("[") || returnDesc.startsWith("L")) {
@@ -130,19 +134,19 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
                 }
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
                 String formatDesc = String.format("(Ljava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
-                // if(debugMethod) {
-                //     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "print", formatDesc, false);
-                // } else {
-                //     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "printWithCustomLogger", formatDesc, false);
-                // }
+                 if(debugResult) {
+                     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "print", formatDesc, false);
+                 } else {
+                     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "printWithCustomLogger", formatDesc, false);
+                 }
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
             } else {
                 mv.visitLdcInsn("void");
-                // if(debugMethod) {
-                //     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "print", "(Ljava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false);
-                // } else {
-                //     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "printWithCustomLogger", "(Ljava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false);
-                // }
+                 if(debugResult) {
+                     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "print", "(Ljava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false);
+                 } else {
+                     mv.visitMethodInsn(INVOKESTATIC, "com/hunter/library/debug/ResultPrinter", "printWithCustomLogger", "(Ljava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false);
+                 }
             }
         }
         super.visitInsn(opcode);

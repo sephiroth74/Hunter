@@ -26,8 +26,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.quinn.hunter:hunter-debug-library:0.9.6'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.quinn.hunter:hunter-debug-library:1.0.0-SNAPSHOT'
     implementation 'org.apache.commons:commons-lang3:3.7'
 }
 
@@ -44,8 +44,8 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.quinn.hunter:hunter-debug-plugin:0.9.7'
-        classpath 'com.quinn.hunter:hunter-transform:0.9.3'
+        classpath 'com.quinn.hunter:hunter-debug-plugin:1.0.0-SNAPSHOT'
+        classpath 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
     }
 }
 
@@ -54,4 +54,5 @@ apply plugin: 'hunter-debug'
 
 debugHunterExt {
     runVariant = 'DEBUG'
+    printResult = false
 }

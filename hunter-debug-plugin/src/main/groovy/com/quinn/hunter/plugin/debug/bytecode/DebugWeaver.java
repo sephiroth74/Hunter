@@ -18,9 +18,14 @@ public final class DebugWeaver extends BaseWeaver {
 
     private static final String PLUGIN_LIBRARY = "com.hunter.library.debug";
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugWeaver.class);
+    private boolean debugResult = false;
 
     @Override
     public void setExtension(Object extension) {
+    }
+
+    public void setDebugResult(boolean value) {
+        this.debugResult = value;
     }
 
     @Override
@@ -33,6 +38,7 @@ public final class DebugWeaver extends BaseWeaver {
         if(debugPreGoClassAdapter.isNeedParameter()) {
             classWriter = new ExtendClassWriter(classLoader, ClassWriter.COMPUTE_MAXS);
             DebugClassAdapter debugClassAdapter = new DebugClassAdapter(classWriter, debugPreGoClassAdapter.getMethodParametersMap());
+            debugClassAdapter.setDebugResult(debugResult);
             debugClassAdapter.attachIncludeMethodsAndImplMethods(debugPreGoClassAdapter.getIncludes(),debugPreGoClassAdapter.getImpls());
             classReader.accept(debugClassAdapter, ClassReader.EXPAND_FRAMES);
         }
