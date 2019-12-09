@@ -57,7 +57,7 @@ ext {
 apply plugin: 'maven'
 
 group='com.quinn.hunter'
-version='1.0.0-SNAPSHOT'
+version='1.0.0-' + (new Date().format( 'yyyyMMdd' ))
 
 def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
 
