@@ -1,7 +1,7 @@
 //include ':hunter-timing-example'
 //include ':hunter-timing-plugin'
 //include ':hunter-timing-library'
-include ':hunter-debug-example'
+ include ':hunter-debug-example'
 include ':hunter-debug-library'
 include ':hunter-debug-plugin'
 //include ':hunter-linelog-example'

@@ -58,5 +58,5 @@ buildscript {
 apply plugin: 'hunter-debug'
 
 debugHunterExt {
-    runVariant = 'RELEASE'
+
 }

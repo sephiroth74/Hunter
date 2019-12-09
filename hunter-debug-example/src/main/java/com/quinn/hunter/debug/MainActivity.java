@@ -8,6 +8,7 @@ import android.util.Log;
 import com.hunter.library.debug.HunterDebug;
 import com.hunter.library.debug.HunterDebugImpl;
 import com.hunter.library.debug.HunterLoggerHandler;
+import com.hunter.library.debug.ParameterPrinter;
 import com.quinn.hunter.debug.test.ClassTest;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
 
     @Override
-    @HunterDebug
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HunterLoggerHandler.installLogImpl(new HunterLoggerHandler(){
@@ -57,21 +57,20 @@ public class MainActivity extends Activity {
         method_return_short();
         method_static("parameter value");
         appendIntAndString(5, "billions");
-        try {
-            method_throw_exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            testVoidMethodWithException();
-        } catch (Exception error) {
-        }
+//        try {
+//            method_throw_exception();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            testVoidMethodWithException();
+//        } catch (Exception error) {
+//        }
         ClassTest classTest = new ClassTest();
-        classTest.test1(1);
-        ClassTest.test4(this);
+        classTest.test(5);
+        classTest.test2();
     };
 
-    @HunterDebugImpl
     private String appendIntAndString(int a, String b) {
         SystemClock.sleep(100);
         return a + " " + b;
@@ -79,7 +78,7 @@ public class MainActivity extends Activity {
 
     private List<String> paramNames = new ArrayList<>();
 
-    @HunterDebug
+    @HunterDebug(debugResult = false, logLevel = Log.ERROR)
     private int method_test_parameter(boolean bool_v, byte byte_v, char char_v, short short_v, int int_v, long long_v, float float_v, double double_v, String string_v, int[] arr, Bundle savedInstanceState){
         int insideLocal = 5;
         int insideLocal2 = 6;
@@ -87,65 +86,54 @@ public class MainActivity extends Activity {
         return insideLocal + insideLocal2;
     }
 
-    @HunterDebug
+    @HunterDebug(logLevel = Log.VERBOSE)
     private void method_empty_parameter_empty_return(){
 
     }
 
-    @HunterDebug
     private boolean method_return_boolean() {
+        ParameterPrinter printer = new ParameterPrinter("ciao", "method");
+        printer.logLevel = 5;
         return true;
     }
 
-    @HunterDebug
     private char method_return_char(){
         return 'c';
     }
-    @HunterDebug
     private byte method_return_byte(){
         return 0x01;
     }
-    @HunterDebug
     private short method_return_short(){
         return 2;
     }
-    @HunterDebug
     private int method_return_int(){
         return 2;
     }
-    @HunterDebug
     private long method_return_long(){
         return 2L;
     }
-    @HunterDebug
     private double method_return_double(){
         return 2;
     }
-    @HunterDebug
     private float method_return_float(){
         return 2.0f;
     }
 
-    @HunterDebug
     private MainPresenter method_return_object(){
         return new MainPresenter();
     }
 
-    @HunterDebug
     private MainPresenter[] method_return_object_array(){
         return new MainPresenter[]{new MainPresenter(),new MainPresenter(),new MainPresenter()};
     }
-    @HunterDebug
     private int[] method_return_array(){
         return new int[]{1,2,3};
     }
 
-    @HunterDebug
     private static Object method_static(String str){
         return "object string" + str;
     }
 
-    @HunterDebug
     private int method_throw_exception() throws Exception{
         int a = 10;
         int b = 0;
@@ -156,7 +144,6 @@ public class MainActivity extends Activity {
         return result;
     }
 
-    @HunterDebug
     private void testVoidMethodWithException(){
         throw new RuntimeException("not impl");
     }

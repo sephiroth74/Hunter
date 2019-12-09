@@ -1,41 +1,17 @@
 package com.quinn.hunter.debug.test;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.util.Log;
 
+import com.hunter.library.debug.HunterDebug;
+import com.hunter.library.debug.ParameterPrinter;
 
-import com.hunter.library.debug.HunterDebugClass;
-import com.hunter.library.debug.HunterDebugImpl;
-import com.hunter.library.debug.HunterDebugSkip;
-
-
-
-@HunterDebugClass
 public class ClassTest {
-
-
-
-    public String test1(int age){
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return "fail";
-        }
-
-        return "success";
+    public void test(int level) {
+        ParameterPrinter presenter = new ParameterPrinter("ciao", "test");
+        presenter.print(Log.ERROR);
     }
 
-//    private void test2(String name,int age){
-//        throw new RuntimeException("not impl");
-//    }
-
-    protected void test3(Intent intent,String age){
-
-    }
-
-
-    public static void test4(Activity activity,String ...args){
-
+    @HunterDebug(logLevel = Log.ASSERT)
+    public void test2() {
     }
 }
