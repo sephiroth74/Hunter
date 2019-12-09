@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 /**
  * Created by Quinn on 26/02/2017.
  * Transform to modify bytecode
@@ -48,7 +49,7 @@ public class HunterTransform extends Transform {
     private WaitableExecutor waitableExecutor;
     private boolean emptyRun = false;
 
-    public HunterTransform(Project project){
+    public HunterTransform(Project project) {
         this.project = project;
         this.logger = project.getLogger();
         this.waitableExecutor = WaitableExecutor.useGlobalSharedThreadPool();
@@ -74,39 +75,40 @@ public class HunterTransform extends Transform {
         return true;
     }
 
-
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings ("deprecation")
     @Override
-    public void transform(Context context,
-                   Collection<TransformInput> inputs,
-                   Collection<TransformInput> referencedInputs,
-                   TransformOutputProvider outputProvider,
-                   boolean isIncremental) throws IOException, TransformException, InterruptedException {
+    public void transform(
+        Context context,
+        Collection<TransformInput> inputs,
+        Collection<TransformInput> referencedInputs,
+        TransformOutputProvider outputProvider,
+        boolean isIncremental) throws IOException, TransformException, InterruptedException {
         RunVariant runVariant = getRunVariant();
-        if("debug".equals(context.getVariantName())) {
+        if ("debug".equals(context.getVariantName())) {
             emptyRun = runVariant == RunVariant.RELEASE || runVariant == RunVariant.NEVER;
-        } else if("release".equals(context.getVariantName())) {
+        } else if ("release".equals(context.getVariantName())) {
             emptyRun = runVariant == RunVariant.DEBUG || runVariant == RunVariant.NEVER;
         }
         logger.warn(getName() + " isIncremental = " + isIncremental + ", runVariant = "
-                + runVariant + ", emptyRun = " + emptyRun + ", inDuplcatedClassSafeMode = " + inDuplcatedClassSafeMode());
+            + runVariant + ", emptyRun = " + emptyRun + ", inDuplcatedClassSafeMode = " + inDuplcatedClassSafeMode());
         long startTime = System.currentTimeMillis();
-        if(!isIncremental) {
+        if (!isIncremental) {
             outputProvider.deleteAll();
         }
         URLClassLoader urlClassLoader = ClassLoaderHelper.getClassLoader(inputs, referencedInputs, project);
         this.bytecodeWeaver.setClassLoader(urlClassLoader);
         boolean flagForCleanDexBuilderFolder = false;
-        for(TransformInput input : inputs) {
-            for(JarInput jarInput : input.getJarInputs()) {
+        for (TransformInput input : inputs) {
+            for (JarInput jarInput : input.getJarInputs()) {
                 Status status = jarInput.getStatus();
                 File dest = outputProvider.getContentLocation(
-                        jarInput.getFile().getAbsolutePath(),
-                        jarInput.getContentTypes(),
-                        jarInput.getScopes(),
-                        Format.JAR);
-                if(isIncremental && !emptyRun) {
-                    switch(status) {
+                    jarInput.getFile().getAbsolutePath(),
+                    jarInput.getContentTypes(),
+                    jarInput.getScopes(),
+                    Format.JAR
+                );
+                if (isIncremental && !emptyRun) {
+                    switch (status) {
                         case NOTCHANGED:
                             break;
                         case ADDED:
@@ -121,7 +123,7 @@ public class HunterTransform extends Transform {
                     }
                 } else {
                     //Forgive me!, Some project will store 3rd-party aar for serveral copies in dexbuilder folder,,unknown issue.
-                    if(inDuplcatedClassSafeMode() & !isIncremental && !flagForCleanDexBuilderFolder) {
+                    if (inDuplcatedClassSafeMode() & !isIncremental && !flagForCleanDexBuilderFolder) {
                         cleanDexBuilderFolder(dest);
                         flagForCleanDexBuilderFolder = true;
                     }
@@ -129,12 +131,13 @@ public class HunterTransform extends Transform {
                 }
             }
 
-            for(DirectoryInput directoryInput : input.getDirectoryInputs()) {
+            for (DirectoryInput directoryInput : input.getDirectoryInputs()) {
                 File dest = outputProvider.getContentLocation(directoryInput.getName(),
-                        directoryInput.getContentTypes(), directoryInput.getScopes(),
-                        Format.DIRECTORY);
+                    directoryInput.getContentTypes(), directoryInput.getScopes(),
+                    Format.DIRECTORY
+                );
                 FileUtils.forceMkdir(dest);
-                if(isIncremental && !emptyRun) {
+                if (isIncremental && !emptyRun) {
                     String srcDirPath = directoryInput.getFile().getAbsolutePath();
                     String destDirPath = dest.getAbsolutePath();
                     Map<File, Status> fileStatusMap = directoryInput.getChangedFiles();
@@ -147,7 +150,7 @@ public class HunterTransform extends Transform {
                             case NOTCHANGED:
                                 break;
                             case REMOVED:
-                                if(destFile.exists()) {
+                                if (destFile.exists()) {
                                     //noinspection ResultOfMethodCallIgnored
                                     destFile.delete();
                                 }
@@ -185,7 +188,7 @@ public class HunterTransform extends Transform {
     }
 
     private void transformDir(final File inputDir, final File outputDir) throws IOException {
-        if(emptyRun) {
+        if (emptyRun) {
             FileUtils.copyDirectory(inputDir, outputDir);
             return;
         }
@@ -205,7 +208,7 @@ public class HunterTransform extends Transform {
 
     private void transformJar(final File srcJar, final File destJar, Status status) {
         waitableExecutor.execute(() -> {
-            if(emptyRun) {
+            if (emptyRun) {
                 FileUtils.copyFile(srcJar, destJar);
                 return null;
             }
@@ -221,7 +224,7 @@ public class HunterTransform extends Transform {
                 //intermediates/transforms/dexBuilder/debug
                 File file = new File(dexBuilderDir).getParentFile();
                 project.getLogger().warn("clean dexBuilder folder = " + file.getAbsolutePath());
-                if(file.exists() && file.isDirectory()) {
+                if (file.exists() && file.isDirectory()) {
                     com.android.utils.FileUtils.deleteDirectoryContents(file);
                 }
             } catch (Exception e) {
@@ -249,7 +252,7 @@ public class HunterTransform extends Transform {
         return RunVariant.ALWAYS;
     }
 
-    protected boolean inDuplcatedClassSafeMode(){
+    protected boolean inDuplcatedClassSafeMode() {
         return false;
     }
 }

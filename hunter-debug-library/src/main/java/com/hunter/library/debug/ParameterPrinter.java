@@ -15,16 +15,9 @@ public class ParameterPrinter {
 
     private String tag = "";
 
-    public int logLevel = Constants.LOG_LEVEL;
-
     public ParameterPrinter(String tag, String methodName) {
         this.tag = tag;
         result.append("⇢ ").append(methodName).append("[");
-    }
-
-    public ParameterPrinter setLogLevel(int level) {
-        this.logLevel = level;
-        return this;
     }
 
     public ParameterPrinter append(String name, int val) {
@@ -109,11 +102,6 @@ public class ParameterPrinter {
         } else {
             return Arrays.deepToString((Object[]) val);
         }
-    }
-
-    public void print() {
-        result.append("]");
-        Log.println(logLevel, tag, result.toString());
     }
 
     public void print(int level) {

@@ -6,9 +6,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.hunter.library.debug.HunterDebug;
-import com.hunter.library.debug.HunterDebugImpl;
 import com.hunter.library.debug.HunterLoggerHandler;
-import com.hunter.library.debug.ParameterPrinter;
 import com.quinn.hunter.debug.test.ClassTest;
 
 import java.util.ArrayList;
@@ -69,6 +67,10 @@ public class MainActivity extends Activity {
         ClassTest classTest = new ClassTest();
         classTest.test(5);
         classTest.test2();
+
+        try {
+            classTest.test3();
+        } catch (Throwable t) {}
     };
 
     private String appendIntAndString(int a, String b) {
@@ -92,8 +94,6 @@ public class MainActivity extends Activity {
     }
 
     private boolean method_return_boolean() {
-        ParameterPrinter printer = new ParameterPrinter("ciao", "method");
-        printer.logLevel = 5;
         return true;
     }
 

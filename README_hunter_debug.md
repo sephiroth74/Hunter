@@ -60,6 +60,11 @@ private String appendIntAndString(int a, String b) {
 
 ```
 
+The **@HunterDebug** annotation supports the following options parameters:
+
+ * `debugResult [bool]` if set to false the result output for the annotated method will be skipped
+ * `logLevel [int]` Log.INFO by default, change the log level used to print the method in/out
+
 
 ```xml 
 

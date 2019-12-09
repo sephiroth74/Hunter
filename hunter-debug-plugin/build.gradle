@@ -8,11 +8,11 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.10'
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm:5.1'
+    implementation "org.ow2.asm:asm:$asm_version"
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm-util:5.1'
+    implementation "org.ow2.asm:asm-util:$asm_version"
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm-commons:5.1'
+    implementation "org.ow2.asm:asm-commons:$asm_version"
 //    implementation 'com.quinn.hunter:hunter-transform:0.9.3'
 //    implementation 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
     implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
@@ -57,7 +57,7 @@ ext {
 apply plugin: 'maven'
 
 group='com.quinn.hunter'
-version='1.0.0-' + (new Date().format( 'yyyyMMdd' ))
+version='1.0.1-' + (new Date().format( 'yyyyMMdd' ))
 
 def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
 
