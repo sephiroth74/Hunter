@@ -120,6 +120,6 @@ debugHunterExt {
 
 ## License
 
-    Original LICENSE can be seen here: [https://github.com/Leaking/Hunter#license](https://github.com/Leaking/Hunter#license)
+Original LICENSE can be seen here: [https://github.com/Leaking/Hunter#license](https://github.com/Leaking/Hunter#license)
 
     
