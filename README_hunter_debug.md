@@ -1,6 +1,20 @@
 # Hunter-Debug
 
-[中文](https://github.com/Leaking/Hunter/blob/master/README_hunter_debug_ch.md)
+This is a fork of the beautiful [hunter library](https://github.com/Leaking/Hunter).
+
+Main differences between this fork and the original library are:
+
+ * There's no @HunterDebugImpl annotation (You can just provide your own custom logger for the @HunterDebug annotation).
+ * The @HunterDebug and @HunterDebugClass annotations support the following parameters:
+    * debugResult[true]: By default this plugin will print both the method call and the method output (with the costed execution time). If you don't want to print for some methods their output, then set this property to false
+    * logLevel[Log.INFO]: Log priority used for logging
+ * The HunterLoggerHandler class has 2 separate methods to log the method call and its result. Thus, when you install your custom logger you can customize both of them:
+        * `protected void logEnter(int priority, String tag, String methodName, String params) { }`
+        * `protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) { }`
+* The method `HunterLoggerHandler.installLogImpl` has been renamed to `HunterLoggerHandler.installLog`
+
+That's pretty much it.
+
 
 
 Hunter-debug is a gradle plugin based on [Hunter](https://github.com/Leaking/Hunter), It's inspired by JakeWharton's [hugo](https://github.com/JakeWharton/hugo), But Hunter-debug
@@ -77,13 +91,17 @@ If you want to print the debug log with your custom logger. You can use `@Hunter
 install a custom HunterLoggerHandler to receive the log message, and send it to your custom logger.
 (You can use both `@HunterDebug` and `@HunterDebugImpl` at the same time)
 
-```groovy 
+```java 
 
-HunterLoggerHandler.installLogImpl(new HunterLoggerHandler(){
+HunterLoggerHandler.installLog(new HunterLoggerHandler() {
     @Override
-    protected void log(String tag, String msg) {
-        //you can use your custom logger here
-        YourLog.i(tag, msg);
+    protected void logEnter(int priority, String tag, String methodName, String params) {
+        Log.println(priority, tag, String.format("<IN> %s::%s(%s)", tag, methodName, params));
+    }
+
+    @Override
+    protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) {
+        Log.println(priority, tag, String.format("<OUT> %s::%s(%sms) = %s", tag, methodName, costedMillis, result));
     }
 });
         
@@ -102,17 +120,6 @@ debugHunterExt {
 
 ## License
 
+    Original LICENSE can be seen here: [https://github.com/Leaking/Hunter#license](https://github.com/Leaking/Hunter#license)
 
-    Copyright 2018 Quinn Chen
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    
