@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR}) @Retention(RetentionPolicy.CLASS)
 public @interface HunterDebugImpl {
+    boolean debugResult() default true;
+    int logLevel() default Constants.LOG_LEVEL;
 }

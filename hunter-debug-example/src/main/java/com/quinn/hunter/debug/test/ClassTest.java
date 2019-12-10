@@ -9,7 +9,7 @@ import com.hunter.library.debug.HunterDebugImpl;
 @HunterDebugClass
 public class ClassTest {
 
-    @HunterDebugImpl
+    @HunterDebugImpl (debugResult = false, logLevel = Log.DEBUG)
     public void test(int level) {
     }
 
@@ -26,8 +26,6 @@ public class ClassTest {
             e.printStackTrace();
         }
         throw new RuntimeException("che palle!");
-        //        return i;
-
     }
 
 }

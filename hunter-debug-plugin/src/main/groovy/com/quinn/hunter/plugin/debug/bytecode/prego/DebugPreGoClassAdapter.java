@@ -1,6 +1,7 @@
 package com.quinn.hunter.plugin.debug.bytecode.prego;
 
 import com.android.build.gradle.internal.LoggerWrapper;
+import com.quinn.hunter.plugin.debug.Constants;
 import com.quinn.hunter.plugin.debug.bytecode.MethodDataHolder;
 import com.quinn.hunter.plugin.debug.bytecode.Parameter;
 
@@ -22,8 +23,9 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     private Map<String, List<Parameter>> methodParametersMap = new HashMap<>();
     private DebugPreGoMethodAdapter debugPreGoMethodAdapter;
     private boolean needParameter = false;
-
     private boolean classDebug = false;
+    private int logLevel = Constants.LOG_LEVEL;
+    private boolean debugOutput = Constants.DEBUG_RESULT;
     private HashMap<String, MethodDataHolder> includes = new HashMap<>();
     private HashMap<String, MethodDataHolder> impls = new HashMap<>();
 
@@ -33,31 +35,41 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        AnnotationVisitor orgin = super.visitAnnotation(desc, visible);
+        AnnotationVisitor origin = super.visitAnnotation(desc, visible);
         if ("Lcom/hunter/library/debug/HunterDebugClass;".equals(desc)) {
+            origin = new DebugPreGoClassAnnotationAdapter(origin, (output, level) -> {
+                debugOutput = output;
+                logLevel = level;
+            });
             classDebug = true;
         }
-        return orgin;
+        return origin;
     }
 
     @Override
     public MethodVisitor visitMethod(
         final int access, final String name,
         final String desc, final String signature, final String[] exceptions) {
+
+        if (classDebug) {
+            logger.lifecycle("visitMethod(" + name + ")");
+        }
+
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         String methodUniqueKey = name + desc;
 
         MethodDataHolder methodDataHolder = new MethodDataHolder(name, desc);
 
-        debugPreGoMethodAdapter = new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
-            (method, useImpl) -> {
-                if (useImpl) {
-                    impls.put(method.getMethodUniqueKey(), method);
+        debugPreGoMethodAdapter =
+            new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
+                (method, useImpl) -> {
+                    if (useImpl) {
+                        impls.put(method.getMethodUniqueKey(), method);
+                    }
+                    includes.put(method.getMethodUniqueKey(), methodDataHolder);
+                    needParameter = true;
                 }
-                includes.put(method.getMethodUniqueKey(), methodDataHolder);
-                needParameter = true;
-            }
-        );
+            );
         return mv == null ? null : debugPreGoMethodAdapter;
     }
 
@@ -78,6 +90,10 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     }
 
     interface MethodCollector {
-        void onIncludeMethod(MethodDataHolder methodName, boolean useImpl);
+        void onIncludeMethod(MethodDataHolder method, boolean useImpl);
+    }
+
+    interface ClassCollector {
+        void onIncludeClass(boolean debugOutput, int logLevel);
     }
 }

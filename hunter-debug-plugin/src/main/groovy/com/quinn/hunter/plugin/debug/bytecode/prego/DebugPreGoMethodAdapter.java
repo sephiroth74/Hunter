@@ -18,6 +18,7 @@ import java.util.Map;
  * Created by Quinn on 19/09/2018.
  */
 public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
+    @SuppressWarnings ("unused")
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugPreGoMethodAdapter.class);
 
     private Map<String, List<Parameter>> methodParametersMap;
@@ -30,8 +31,13 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
     private boolean useImpl = false;
 
     public DebugPreGoMethodAdapter(
-        MethodDataHolder method, String methodKey, Map<String, List<Parameter>> methodParametersMap, MethodVisitor mv,
-        boolean needParameter, DebugPreGoClassAdapter.MethodCollector methodCollector) {
+        MethodDataHolder method,
+        String methodKey,
+        Map<String, List<Parameter>> methodParametersMap,
+        MethodVisitor mv,
+        boolean needParameter,
+        DebugPreGoClassAdapter.MethodCollector methodCollector) {
+
         super(Opcodes.ASM5, mv);
         this.method = method;
         this.methodKey = methodKey;
@@ -44,7 +50,7 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 
         AnnotationVisitor defaultAv = super.visitAnnotation(desc, visible);
-        DebugPreGoAnnotationAdapter adapter = null;
+        DebugPreGoMethodAnnotationAdapter adapter = null;
 
         if ("Lcom/hunter/library/debug/HunterDebugSkip;".equals(desc)) {
             needParameter = false;
@@ -52,8 +58,11 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
             needParameter = true;
             useImpl = true;
         } else if ("Lcom/hunter/library/debug/HunterDebug;".equals(desc)) {
-            adapter = new DebugPreGoAnnotationAdapter(this.method, defaultAv);
             needParameter = true;
+        }
+
+        if (needParameter) {
+            adapter = new DebugPreGoMethodAnnotationAdapter(this.method, defaultAv);
         }
 
         return adapter != null ? adapter : defaultAv;
