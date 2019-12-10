@@ -11,9 +11,6 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugPreGoMethodAnnotationAdapter.class);
     private final MethodDataHolder method;
 
-    private boolean debugResult = Constants.DEBUG_RESULT;
-    private int logLevel = Constants.LOG_LEVEL;
-
     public DebugPreGoMethodAnnotationAdapter(
             final MethodDataHolder method, final AnnotationVisitor av) {
         super(Opcodes.ASM5, av);
@@ -23,9 +20,9 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
     @Override
     public void visit(final String name, final Object value) {
         if ("debugResult".equals(name)) {
-            debugResult = (boolean) value;
+            method.setDebugOutput((boolean) value);
         } else if ("logLevel".equals(name)) {
-            logLevel = (int) value;
+            method.setLogLevel((int) value);
         }
 
         super.visit(name, value);
@@ -38,9 +35,7 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
 
     @Override
     public void visitEnd() {
-        logger.lifecycle("visitEnd(" + method.getName() + ", debugResult: " + debugResult + ", logLevel: " + logLevel + ")");
-        this.method.setDebugOutput(debugResult);
-        this.method.setLogLevel(logLevel);
+        logger.info("visitEnd(" + method + ")");
         super.visitEnd();
     }
 

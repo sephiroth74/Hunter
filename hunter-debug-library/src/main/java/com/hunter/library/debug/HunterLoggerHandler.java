@@ -9,7 +9,7 @@ public class HunterLoggerHandler {
 
     protected void log(int priority, String tag, String msg) { }
 
-    private static HunterLoggerHandler DEFAULT_IMPL = new HunterLoggerHandler() {
+    public static HunterLoggerHandler DEFAULT_IMPL = new HunterLoggerHandler() {
         @Override
         public void log(int priority, String tag, String msg) {
             Log.println(priority, tag, msg);

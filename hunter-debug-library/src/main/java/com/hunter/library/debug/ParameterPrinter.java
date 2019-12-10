@@ -123,7 +123,8 @@ public class ParameterPrinter {
 
     public void print(int level) {
         result.append("]");
-        Log.println(level, tag, result.toString());
+//        Log.println(level, tag, result.toString());
+        HunterLoggerHandler.DEFAULT_IMPL.log(level, tag, result.toString());
     }
 
     public void printWithCustomLogger(int level) {

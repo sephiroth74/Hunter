@@ -4,20 +4,19 @@ import android.util.Log;
 
 import com.hunter.library.debug.HunterDebug;
 import com.hunter.library.debug.HunterDebugClass;
-import com.hunter.library.debug.HunterDebugImpl;
+import com.hunter.library.debug.HunterDebugSkip;
 
-@HunterDebugClass
+@HunterDebugClass(logLevel = Log.WARN, debugResult = false)
 public class ClassTest {
 
-    @HunterDebugImpl (debugResult = false, logLevel = Log.DEBUG)
     public void test(int level) {
     }
 
-    @HunterDebug (logLevel = Log.INFO, debugResult = false)
+    @HunterDebugSkip
     public void test2() {
     }
 
-    @HunterDebug (logLevel = Log.WARN)
+    @HunterDebug(logLevel = Log.VERBOSE, debugResult = true)
     public int test3() {
         int i = 0;
         try {

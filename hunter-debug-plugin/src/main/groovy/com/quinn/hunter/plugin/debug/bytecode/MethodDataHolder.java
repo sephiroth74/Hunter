@@ -61,9 +61,10 @@ public class MethodDataHolder {
 
     @Override
     public String toString() {
-        return "MethodPresenter{" +
+        return "MethodDataHolder{" +
                 "name='" + name + '\'' +
                 ", debugOutput=" + debugOutput +
+                ", logLevel=" + logLevel +
                 '}';
     }
 

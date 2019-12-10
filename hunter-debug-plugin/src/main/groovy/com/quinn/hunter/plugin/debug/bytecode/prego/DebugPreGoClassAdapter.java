@@ -34,6 +34,16 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     }
 
     @Override
+    public void visitInnerClass(String name, String outerName, String innerName, int access) {
+        super.visitInnerClass(name, outerName, innerName, access);
+    }
+
+    @Override
+    public void visitOuterClass(String owner, String name, String descriptor) {
+        super.visitOuterClass(owner, name, descriptor);
+    }
+
+    @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor origin = super.visitAnnotation(desc, visible);
         if ("Lcom/hunter/library/debug/HunterDebugClass;".equals(desc)) {
@@ -48,28 +58,26 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(
-        final int access, final String name,
-        final String desc, final String signature, final String[] exceptions) {
-
-        if (classDebug) {
-            logger.lifecycle("visitMethod(" + name + ")");
-        }
+            final int access, final String name,
+            final String desc, final String signature, final String[] exceptions) {
 
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         String methodUniqueKey = name + desc;
 
         MethodDataHolder methodDataHolder = new MethodDataHolder(name, desc);
+        methodDataHolder.setDebugOutput(debugOutput);
+        methodDataHolder.setLogLevel(logLevel);
 
         debugPreGoMethodAdapter =
-            new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
-                (method, useImpl) -> {
-                    if (useImpl) {
-                        impls.put(method.getMethodUniqueKey(), method);
-                    }
-                    includes.put(method.getMethodUniqueKey(), methodDataHolder);
-                    needParameter = true;
-                }
-            );
+                new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
+                        (method, useImpl) -> {
+                            if (useImpl) {
+                                impls.put(method.getMethodUniqueKey(), method);
+                            }
+                            includes.put(method.getMethodUniqueKey(), methodDataHolder);
+                            needParameter = true;
+                        }
+                );
         return mv == null ? null : debugPreGoMethodAdapter;
     }
 
