@@ -7,17 +7,13 @@ import android.util.Log;
  */
 public class HunterLoggerHandler {
 
-    protected void log(String tag, String msg) {
+    protected void log(int priority, String tag, String msg) { }
 
-    }
-
-    public static HunterLoggerHandler DEFAULT_IMPL = new HunterLoggerHandler() {
-
+    private static HunterLoggerHandler DEFAULT_IMPL = new HunterLoggerHandler() {
         @Override
-        public void log(String tag, String msg) {
-            Log.i(tag, msg);
+        public void log(int priority, String tag, String msg) {
+            Log.println(priority, tag, msg);
         }
-
     };
 
     public static HunterLoggerHandler CUSTOM_IMPL = DEFAULT_IMPL;

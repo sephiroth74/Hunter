@@ -21,9 +21,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         HunterLoggerHandler.installLogImpl(new HunterLoggerHandler(){
             @Override
-            protected void log(String tag, String msg) {
+            protected void log(int level, String tag, String msg) {
                 //you can use your custom logger here "
-                Log.i(tag, "[you can use your custom logger here \"]" + msg);
+                Log.println(level, tag, "[you can use your custom logger here \"]" + msg);
             }
         });
         setContentView(R.layout.activity_main);

@@ -4,10 +4,12 @@ import android.util.Log;
 
 import com.hunter.library.debug.HunterDebug;
 import com.hunter.library.debug.HunterDebugClass;
+import com.hunter.library.debug.HunterDebugImpl;
 
 @HunterDebugClass
 public class ClassTest {
 
+    @HunterDebugImpl
     public void test(int level) {
     }
 

@@ -4,16 +4,15 @@ import android.util.Log;
 
 import java.util.Arrays;
 
+@SuppressWarnings ("unused")
 public class ParameterPrinter {
-
-
     private StringBuilder result = new StringBuilder();
 
     private int paramIndex = 0;
 
     private String divider = ", ";
 
-    private String tag = "";
+    private String tag;
 
     public ParameterPrinter(String tag, String methodName) {
         this.tag = tag;
@@ -21,55 +20,73 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, int val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, boolean val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, short val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, byte val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, char val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, long val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, double val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, float val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, Object val) {
-        if (paramIndex++ != 0) result.append(divider);
+        if (paramIndex++ != 0) {
+            result.append(divider);
+        }
         if (val != null && val.getClass().isArray()) {
             result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
         } else {
@@ -109,11 +126,10 @@ public class ParameterPrinter {
         Log.println(level, tag, result.toString());
     }
 
-    public void printWithCustomLogger() {
+    public void printWithCustomLogger(int level) {
         result.append("]");
-        HunterLoggerHandler.CUSTOM_IMPL.log(tag, result.toString());
+        HunterLoggerHandler.CUSTOM_IMPL.log(level, tag, result.toString());
     }
-
 
 }
 
