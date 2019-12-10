@@ -9,9 +9,9 @@ Main differences between this fork and the original library are:
     * debugResult[true]: By default this plugin will print both the method call and the method output (with the costed execution time). If you don't want to print for some methods their output, then set this property to false
     * logLevel[Log.INFO]: Log priority used for logging
  * The HunterLoggerHandler class has 2 separate methods to log the method call and its result. Thus, when you install your custom logger you can customize both of them:
-        * `protected void logEnter(int priority, String tag, String methodName, String params) { }`
-        * `protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) { }`
-* The method `HunterLoggerHandler.installLogImpl` has been renamed to `HunterLoggerHandler.installLog`
+    * protected void logEnter(int priority, String tag, String methodName, String params)
+    * protected void logExit(int priority, String tag, String methodName, long costedMillis, String result)
+ * The method `HunterLoggerHandler.installLogImpl` has been renamed to `HunterLoggerHandler.installLog`
 
 That's pretty much it.
 
