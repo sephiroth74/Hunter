@@ -18,25 +18,24 @@ import java.util.Map;
  * Created by Quinn on 19/09/2018.
  */
 public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugPreGoMethodAdapter.class);
 
     private Map<String, List<Parameter>> methodParametersMap;
     private List<Parameter> parameters = new ArrayList<>();
     private String methodKey;
-    private boolean needParameter = false;
+    private boolean needParameter;
     private List<Label> labelList = new ArrayList<>();
     private DebugPreGoClassAdapter.MethodCollector methodCollector;
     private final MethodDataHolder method;
-    private boolean useImpl = false;
 
-    public DebugPreGoMethodAdapter(
-        MethodDataHolder method,
-        String methodKey,
-        Map<String, List<Parameter>> methodParametersMap,
-        MethodVisitor mv,
-        boolean needParameter,
-        DebugPreGoClassAdapter.MethodCollector methodCollector) {
+    DebugPreGoMethodAdapter(
+            MethodDataHolder method,
+            String methodKey,
+            Map<String, List<Parameter>> methodParametersMap,
+            MethodVisitor mv,
+            boolean needParameter,
+            DebugPreGoClassAdapter.MethodCollector methodCollector) {
 
         super(Opcodes.ASM5, mv);
         this.method = method;
@@ -54,9 +53,6 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
 
         if ("Lcom/hunter/library/debug/HunterDebugSkip;".equals(desc)) {
             needParameter = false;
-        } else if ("Lcom/hunter/library/debug/HunterDebugImpl;".equals(desc)) {
-            needParameter = true;
-            useImpl = true;
         } else if ("Lcom/hunter/library/debug/HunterDebug;".equals(desc)) {
             needParameter = true;
         }
@@ -84,7 +80,7 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
     @Override
     public void visitEnd() {
         if (needParameter) {
-            methodCollector.onIncludeMethod(method, useImpl);
+            methodCollector.onIncludeMethod(method);
         }
         methodParametersMap.put(methodKey, parameters);
         super.visitEnd();

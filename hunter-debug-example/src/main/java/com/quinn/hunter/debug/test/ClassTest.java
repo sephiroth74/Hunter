@@ -6,10 +6,13 @@ import com.hunter.library.debug.HunterDebug;
 import com.hunter.library.debug.HunterDebugClass;
 import com.hunter.library.debug.HunterDebugSkip;
 
-@HunterDebugClass(logLevel = Log.WARN, debugResult = false)
+import androidx.core.util.Pair;
+
+@HunterDebugClass(logLevel = Log.WARN, debugResult = true)
 public class ClassTest {
 
-    public void test(int level) {
+    public Pair<Integer, String> test(int level, String type, byte value) {
+        return Pair.create(level, type);
     }
 
     @HunterDebugSkip

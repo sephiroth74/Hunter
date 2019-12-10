@@ -14,18 +14,17 @@ import java.util.List;
  * Created by Quinn on 16/09/2018.
  */
 public final class DebugMethodAdapter extends LocalVariablesSorter implements Opcodes {
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugMethodAdapter.class);
     private final MethodDataHolder method;
     private List<Parameter> parameters;
     private String className;
     private boolean debugMethod = true;
-    private boolean debugMethodWithCustomLogger = false;
     private int timingStartVarIndex;
     private String methodDesc;
 
     public DebugMethodAdapter(
-        String className, List<Parameter> parameters, MethodDataHolder method, int access, String desc, MethodVisitor mv) {
+            String className, List<Parameter> parameters, MethodDataHolder method, int access, String desc, MethodVisitor mv) {
         super(Opcodes.ASM5, access, desc, mv);
         if (!className.endsWith("/")) {
             this.className = className.substring(className.lastIndexOf("/") + 1);
@@ -37,15 +36,10 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
         this.methodDesc = desc;
     }
 
-    void switchToDebugImpl() {
-        debugMethod = false;
-        debugMethodWithCustomLogger = true;
-    }
-
     @Override
     public void visitCode() {
         super.visitCode();
-        if (!debugMethod && !debugMethodWithCustomLogger) {
+        if (!debugMethod) {
             return;
         }
         int printUtilsVarIndex = newLocal(Type.getObjectType(Constants.PARAM_PRINTER_CLASS));
@@ -54,7 +48,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
         mv.visitLdcInsn(className);
         mv.visitLdcInsn(method.getName());
         mv.visitMethodInsn(
-            INVOKESPECIAL, Constants.PARAM_PRINTER_CLASS, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+                INVOKESPECIAL, Constants.PARAM_PRINTER_CLASS, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false);
         mv.visitVarInsn(ASTORE, printUtilsVarIndex);
         for (int i = 0; i < parameters.size(); i++) {
             Parameter parameter = parameters.get(i);
@@ -75,11 +69,8 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
             mv.visitInsn(level);
         }
 
-        if (debugMethod) {
-            mv.visitMethodInsn(INVOKEVIRTUAL, Constants.PARAM_PRINTER_CLASS, "print", "(I)V", false);
-        } else if (debugMethodWithCustomLogger) {
-            mv.visitMethodInsn(INVOKEVIRTUAL, Constants.PARAM_PRINTER_CLASS, "printWithCustomLogger", "(I)V", false);
-        }
+        mv.visitMethodInsn(INVOKEVIRTUAL, Constants.PARAM_PRINTER_CLASS, "print", "(I)V", false);
+
         //Timing
         timingStartVarIndex = newLocal(Type.LONG_TYPE);
         mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
@@ -96,8 +87,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
 
     @Override
     public void visitInsn(int opcode) {
-        if (method.isDebugOutput() && (debugMethod || debugMethodWithCustomLogger) && ((opcode >= IRETURN && opcode <= RETURN)
-            || opcode == ATHROW)) {
+        if (method.isDebugOutput() && debugMethod && ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW)) {
             Type returnType = Type.getReturnType(methodDesc);
             String returnDesc = methodDesc.substring(methodDesc.indexOf(")") + 1);
             if (returnDesc.startsWith("[") || returnDesc.startsWith("L")) {
@@ -143,28 +133,15 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
                     returnDesc = "Ljava/lang/Object;";
                 }
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
-                if (debugMethodWithCustomLogger) {
-                    String formatDesc = String.format("(ILjava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
-                    mv.visitMethodInsn(
-                        INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "printWithCustomLogger", formatDesc, false);
-                } else {
-                    String formatDesc = String.format("(ILjava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
-                    mv.visitMethodInsn(INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "print", formatDesc, false);
-                }
+                String formatDesc = String.format("(ILjava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
+                mv.visitMethodInsn(INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "print", formatDesc, false);
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
             } else {
                 mv.visitLdcInsn("void");
-                if (debugMethodWithCustomLogger) {
-                    mv.visitMethodInsn(
-                        INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "printWithCustomLogger",
-                        "(ILjava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false
-                    );
-                } else {
-                    mv.visitMethodInsn(
+                mv.visitMethodInsn(
                         INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "print",
                         "(ILjava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false
-                    );
-                }
+                );
             }
         }
         super.visitInsn(opcode);

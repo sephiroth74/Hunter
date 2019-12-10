@@ -18,17 +18,14 @@ public final class DebugClassAdapter extends ClassVisitor {
     private String className;
 
     private HashMap<String, MethodDataHolder> includeMethods = new HashMap<>();
-    private HashMap<String, MethodDataHolder> implMethods = new HashMap<>();
 
     DebugClassAdapter(final ClassVisitor cv, final Map<String, List<Parameter>> methodParametersMap) {
         super(Opcodes.ASM5, cv);
         this.methodParametersMap = methodParametersMap;
     }
 
-    public void attachIncludeMethodsAndImplMethods(
-        HashMap<String, MethodDataHolder> includeMethods, HashMap<String, MethodDataHolder> implMethods) {
+    public void attachIncludeMethods(HashMap<String, MethodDataHolder> includeMethods) {
         this.includeMethods.putAll(includeMethods);
-        this.implMethods.putAll(implMethods);
     }
 
     @Override
@@ -39,8 +36,8 @@ public final class DebugClassAdapter extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(
-        final int access, final String name,
-        final String desc, final String signature, final String[] exceptions) {
+            final int access, final String name,
+            final String desc, final String signature, final String[] exceptions) {
 
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
 
@@ -48,11 +45,7 @@ public final class DebugClassAdapter extends ClassVisitor {
 
         if (null != method) {
             String methodUniqueKey = name + desc;
-            debugMethodAdapter =
-                new DebugMethodAdapter(className, methodParametersMap.get(methodUniqueKey), method, access, desc, mv);
-            if (implMethods.get(name + desc) != null) {
-                debugMethodAdapter.switchToDebugImpl();
-            }
+            debugMethodAdapter = new DebugMethodAdapter(className, methodParametersMap.get(methodUniqueKey), method, access, desc, mv);
             return debugMethodAdapter;
         }
         return mv;

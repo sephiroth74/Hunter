@@ -1,12 +1,11 @@
 package com.hunter.library.debug;
 
-import android.util.Log;
-
 import java.util.Arrays;
 
-@SuppressWarnings ("unused")
+@SuppressWarnings("unused")
 public class ParameterPrinter {
-    private StringBuilder result = new StringBuilder();
+    private StringBuilder paramsList = new StringBuilder();
+    private final String methodName;
 
     private int paramIndex = 0;
 
@@ -16,81 +15,82 @@ public class ParameterPrinter {
 
     public ParameterPrinter(String tag, String methodName) {
         this.tag = tag;
-        result.append("⇢ ").append(methodName).append("[");
+        this.methodName = methodName;
+//        paramsList.append("⇢ ").append(methodName).append("[");
     }
 
     public ParameterPrinter append(String name, int val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, boolean val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, short val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, byte val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, char val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, long val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, double val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, float val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
-        result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         return this;
     }
 
     public ParameterPrinter append(String name, Object val) {
         if (paramIndex++ != 0) {
-            result.append(divider);
+            paramsList.append(divider);
         }
         if (val != null && val.getClass().isArray()) {
-            result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
+            paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
         } else {
-            result.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+            paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         }
         return this;
     }
@@ -122,16 +122,9 @@ public class ParameterPrinter {
     }
 
     public void print(int level) {
-        result.append("]");
-//        Log.println(level, tag, result.toString());
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, tag, result.toString());
+//        paramsList.append("]");
+        HunterLoggerHandler.DEFAULT_IMPL.logEnter(level, tag, methodName, paramsList.toString());
     }
-
-    public void printWithCustomLogger(int level) {
-        result.append("]");
-        HunterLoggerHandler.CUSTOM_IMPL.log(level, tag, result.toString());
-    }
-
 }
 
 

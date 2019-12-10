@@ -4,11 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 
-import com.hunter.library.debug.HunterDebugClass;
-import com.hunter.library.debug.HunterDebugImpl;
-import com.hunter.library.debug.HunterDebugSkip;
-
-
 
 public class ClassTest2 {
     public String test1(int age){

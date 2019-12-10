@@ -27,7 +27,6 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     private int logLevel = Constants.LOG_LEVEL;
     private boolean debugOutput = Constants.DEBUG_RESULT;
     private HashMap<String, MethodDataHolder> includes = new HashMap<>();
-    private HashMap<String, MethodDataHolder> impls = new HashMap<>();
 
     public DebugPreGoClassAdapter(final ClassVisitor cv) {
         super(Opcodes.ASM5, cv);
@@ -70,10 +69,7 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
 
         debugPreGoMethodAdapter =
                 new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
-                        (method, useImpl) -> {
-                            if (useImpl) {
-                                impls.put(method.getMethodUniqueKey(), method);
-                            }
+                        method -> {
                             includes.put(method.getMethodUniqueKey(), methodDataHolder);
                             needParameter = true;
                         }
@@ -89,16 +85,12 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
         return includes;
     }
 
-    public HashMap<String, MethodDataHolder> getImpls() {
-        return impls;
-    }
-
     public boolean isNeedParameter() {
         return needParameter;
     }
 
     interface MethodCollector {
-        void onIncludeMethod(MethodDataHolder method, boolean useImpl);
+        void onIncludeMethod(MethodDataHolder method);
     }
 
     interface ClassCollector {

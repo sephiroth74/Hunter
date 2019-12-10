@@ -1,6 +1,7 @@
 package com.quinn.hunter.plugin.debug.bytecode;
 
 import com.android.build.gradle.internal.LoggerWrapper;
+import com.quinn.hunter.plugin.debug.Constants;
 import com.quinn.hunter.plugin.debug.bytecode.prego.DebugPreGoClassAdapter;
 import com.quinn.hunter.transform.asm.BaseWeaver;
 import com.quinn.hunter.transform.asm.ExtendClassWriter;
@@ -15,8 +16,7 @@ import java.io.InputStream;
  * Created by Quinn on 16/09/2018.
  */
 public final class DebugWeaver extends BaseWeaver {
-
-    private static final String PLUGIN_LIBRARY = "com.hunter.library.debug";
+    @SuppressWarnings("unused")
     private static final LoggerWrapper logger = LoggerWrapper.getLogger(DebugWeaver.class);
 
     @Override
@@ -35,7 +35,7 @@ public final class DebugWeaver extends BaseWeaver {
             DebugClassAdapter debugClassAdapter =
                 new DebugClassAdapter(classWriter, debugPreGoClassAdapter.getMethodParametersMap());
             debugClassAdapter
-                .attachIncludeMethodsAndImplMethods(debugPreGoClassAdapter.getIncludes(), debugPreGoClassAdapter.getImpls());
+                .attachIncludeMethods(debugPreGoClassAdapter.getIncludes());
             classReader.accept(debugClassAdapter, ClassReader.EXPAND_FRAMES);
         }
         return classWriter.toByteArray();
@@ -44,7 +44,7 @@ public final class DebugWeaver extends BaseWeaver {
     @Override
     public boolean isWeavableClass(String fullQualifiedClassName) {
         boolean superResult = super.isWeavableClass(fullQualifiedClassName);
-        boolean isByteCodePlugin = fullQualifiedClassName.startsWith(PLUGIN_LIBRARY);
+        boolean isByteCodePlugin = fullQualifiedClassName.startsWith(Constants.PLUGIN_LIBRARY);
         return superResult && !isByteCodePlugin;
     }
 

@@ -1,115 +1,50 @@
 package com.hunter.library.debug;
 
-import android.util.Log;
-
 import java.util.Arrays;
 
-@SuppressWarnings ("unused")
+@SuppressWarnings("unused")
 public class ResultPrinter {
 
     public static void print(int level, String className, String methodName, long costedMillis, byte returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, char returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, short returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, int returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, boolean returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, long returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, float returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, double returnVal) {
-//        Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-        HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+        HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
     public static void print(int level, String className, String methodName, long costedMillis, Object returnVal) {
         if (returnVal != null && returnVal.getClass().isArray()) {
-            Log.println(
-                level, className,
-                String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", arrayToString(returnVal))
-            );
-            HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", arrayToString(returnVal)));
+            HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, arrayToString(returnVal));
         } else {
-//            Log.println(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal));
-            HunterLoggerHandler.DEFAULT_IMPL.log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
+            HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
         }
     }
 
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, byte returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, char returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, short returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, int returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, boolean returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, long returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, float returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, double returnVal) {
-        HunterLoggerHandler.CUSTOM_IMPL
-            .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal + ""));
-    }
-
-    public static void printWithCustomLogger(int level, String className, String methodName, long costedMillis, Object returnVal) {
-        if (returnVal != null && returnVal.getClass().isArray()) {
-            HunterLoggerHandler.CUSTOM_IMPL.log(level, className,
-                String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", arrayToString(returnVal))
-            );
-        } else {
-            HunterLoggerHandler.CUSTOM_IMPL
-                .log(level, className, String.format(Constants.RETURN_PRINT_FORMAT, methodName, costedMillis + "", returnVal));
-        }
-    }
 
     private static String arrayToString(Object val) {
         if (!(val instanceof Object[])) {
