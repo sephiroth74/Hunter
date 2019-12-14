@@ -24,21 +24,24 @@ repositories {
     mavenCentral()
 }
 
+def props = extensions.extraProperties.properties
+version = props.get('hunter.debug.plugin.version') + '-' + (new Date().format('yyyyMMdd'))
+group   = props.get('hunter.default.library.group')
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'hunter-debug-plugin'
+    bintrayName = name
 
-    publishedGroupId = 'com.quinn.hunter'
-    libraryName = 'hunter-debug-plugin'
-    artifact = 'hunter-debug-plugin'
+    publishedGroupId = group
+    libraryName = name
+    artifact = name
 
     libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
 
     siteUrl = 'https://github.com/Leaking/Hunter'
     gitUrl = 'https://github.com/Leaking/Hunter.git'
 
-    libraryVersion = '0.9.7s'
+    libraryVersion = version
 
     developerId = 'Leaking'
     developerName = 'QuinnChen'
@@ -54,10 +57,11 @@ ext {
 
 //publish script for debug mode
 
+evaluationDependsOn(':hunter-transform')
+
 apply plugin: 'maven'
 
-group='com.quinn.hunter'
-version='1.0.2-' + (new Date().format( 'yyyyMMdd' ))
+print(group + ':' + name + ':' + version)
 
 def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
 

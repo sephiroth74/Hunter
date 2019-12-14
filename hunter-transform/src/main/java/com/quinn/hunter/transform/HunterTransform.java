@@ -32,7 +32,7 @@ import java.util.Set;
  * Created by Quinn on 26/02/2017.
  * Transform to modify bytecode
  */
-public class HunterTransform extends Transform {
+public abstract class HunterTransform extends Transform {
 
     private final Logger logger;
 
@@ -248,11 +248,17 @@ public class HunterTransform extends Transform {
         return true;
     }
 
+    @SuppressWarnings ("WeakerAccess")
     protected RunVariant getRunVariant() {
         return RunVariant.ALWAYS;
     }
 
+    @SuppressWarnings ("WeakerAccess")
     protected boolean inDuplcatedClassSafeMode() {
         return false;
     }
+
+    protected abstract boolean getDebugResult();
+
+    protected abstract int getLogLevel();
 }
