@@ -71,6 +71,7 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
                 new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
                         method -> {
                             includes.put(method.getMethodUniqueKey(), methodDataHolder);
+                            //System.out.println("method: " + methodDataHolder.toString());
                             needParameter = true;
                         }
                 );

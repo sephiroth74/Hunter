@@ -53,9 +53,11 @@ buildscript {
     }
 }
 
+evaluationDependsOn(':hunter-debug-library')
 
 apply plugin: 'hunter-debug'
 
 debugHunterExt {
-
+    debugResult false
+    logLevel 6
 }

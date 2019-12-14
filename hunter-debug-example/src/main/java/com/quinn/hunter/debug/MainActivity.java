@@ -23,12 +23,12 @@ public class MainActivity extends Activity {
         HunterLoggerHandler.installLog(new HunterLoggerHandler() {
             @Override
             protected void logEnter(int priority, String tag, String methodName, String params) {
-                Log.println(priority, tag, String.format("<IN> %s::%s(%s)", tag, methodName, params));
+                Log.println(priority, "hunter-" + tag, String.format("<IN> %s::%s(%s)", tag, methodName, params));
             }
 
             @Override
             protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) {
-                Log.println(priority, tag, String.format("<OUT> %s::%s(%sms) = %s", tag, methodName, costedMillis, result));
+                Log.println(priority, "hunter-" + tag, String.format("<OUT> %s::%s(%sms) = %s", tag, methodName, costedMillis, result));
             }
         });
 
@@ -89,7 +89,8 @@ public class MainActivity extends Activity {
 
     private List<String> paramNames = new ArrayList<>();
 
-    @HunterDebug(debugResult = false, logLevel = Log.ERROR)
+
+    @HunterDebug(debugResult = true, logLevel = Log.ERROR)
     private int method_test_parameter(boolean bool_v, byte byte_v, char char_v, short short_v, int int_v, long long_v, float float_v, double double_v, String string_v, int[] arr, Bundle savedInstanceState) {
         int insideLocal = 5;
         int insideLocal2 = 6;
