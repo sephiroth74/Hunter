@@ -5,25 +5,32 @@ import android.util.Log;
 /**
  * Created by quinn on 2019/1/8
  */
+@SuppressWarnings("unused")
 public class HunterLoggerHandler {
 
-    protected void log(String tag, String msg) {
+    protected void logEnter(int priority, String tag, String methodName, String params) { }
 
-    }
+    protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) { }
 
-    public static HunterLoggerHandler DEFAULT_IMPL = new HunterLoggerHandler() {
+    public static final HunterLoggerHandler NullLogger = new HunterLoggerHandler();
+
+    public static final HunterLoggerHandler DefaultLogger = new HunterLoggerHandler() {
 
         @Override
-        public void log(String tag, String msg) {
-            Log.i(tag, msg);
+        protected void logEnter(int priority, String tag, String methodName, String params) {
+            Log.println(priority, tag, String.format("⇢ %s[%s]", methodName, params));
         }
 
+        @Override
+        protected void logExit(int priority, String tag, String methodName, long costedMillis, String result) {
+            Log.println(priority, tag, String.format("⇠ %s[%sms] = %s", methodName, costedMillis, result));
+        }
     };
 
-    public static HunterLoggerHandler CUSTOM_IMPL = DEFAULT_IMPL;
+    static HunterLoggerHandler DEFAULT_IMPL = DefaultLogger;
 
-    public static void installLogImpl(HunterLoggerHandler loggerHandler) {
-        CUSTOM_IMPL = loggerHandler;
+    public static void installLog(HunterLoggerHandler loggerHandler) {
+        DEFAULT_IMPL = loggerHandler;
     }
 
 }

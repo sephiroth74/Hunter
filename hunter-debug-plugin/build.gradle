@@ -3,17 +3,19 @@ apply plugin: 'groovy'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation 'com.android.tools.build:gradle:3.1.4'
-    implementation 'com.android.tools.build:gradle-api:3.1.4'
+    implementation 'com.android.tools.build:gradle:3.5.3'
+    implementation 'com.android.tools.build:gradle-api:3.5.3'
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.10'
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm:5.1'
+    implementation "org.ow2.asm:asm:$asm_version"
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm-util:5.1'
+    implementation "org.ow2.asm:asm-util:$asm_version"
     //noinspection GradleDependency
-    implementation 'org.ow2.asm:asm-commons:5.1'
-    implementation 'com.quinn.hunter:hunter-transform:0.9.3'
+    implementation "org.ow2.asm:asm-commons:$asm_version"
+//    implementation 'com.quinn.hunter:hunter-transform:0.9.3'
+//    implementation 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
+    implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
 }
 
 repositories {
@@ -47,22 +49,22 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
 //publish script for debug mode
 
-//apply plugin: 'maven'
-//
-//group='com.quinn.hunter'
-//version='1.0.0'
-//
-//def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
-//
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: localRepoURL)
-//        }
-//    }
-//}
+apply plugin: 'maven'
+
+group='com.quinn.hunter'
+version='1.0.2-' + (new Date().format( 'yyyyMMdd' ))
+
+def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: localRepoURL)
+        }
+    }
+}

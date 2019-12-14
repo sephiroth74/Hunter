@@ -1,41 +1,33 @@
 package com.quinn.hunter.debug.test;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.util.Log;
 
-
+import com.hunter.library.debug.HunterDebug;
 import com.hunter.library.debug.HunterDebugClass;
-import com.hunter.library.debug.HunterDebugImpl;
 import com.hunter.library.debug.HunterDebugSkip;
 
+import androidx.core.util.Pair;
 
-
-@HunterDebugClass
+@HunterDebugClass(logLevel = Log.WARN, debugResult = true)
 public class ClassTest {
 
+    public Pair<Integer, String> test(int level, String type, byte value) {
+        return Pair.create(level, type);
+    }
 
+    @HunterDebugSkip
+    public void test2() {
+    }
 
-    public String test1(int age){
+    @HunterDebug(logLevel = Log.VERBOSE, debugResult = true)
+    public int test3() {
+        int i = 0;
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            return "fail";
         }
-
-        return "success";
+        throw new RuntimeException("che palle!");
     }
 
-//    private void test2(String name,int age){
-//        throw new RuntimeException("not impl");
-//    }
-
-    protected void test3(Intent intent,String age){
-
-    }
-
-
-    public static void test4(Activity activity,String ...args){
-
-    }
 }
