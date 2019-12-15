@@ -5,11 +5,6 @@ def props = extensions.extraProperties.properties
 
 version = props.get('hunter.debug.library.version')
 group = props.get('hunter.default.library.group')
-
-if (!version.endsWith('-SNAPSHOT')) {
-    version += '-' + (new Date().format('yyyyMMdd'))
-}
-
 def repoPath = props.get('hunter.repo.path')
 def repoUrl = props.get('hunter.repo.url')
 def licenseUrl = props.get('hunter.license.url')

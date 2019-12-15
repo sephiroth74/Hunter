@@ -12,12 +12,15 @@ import com.quinn.hunter.debug.test.ClassTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MainActivity extends Activity {
 
     public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.plant(new Timber.DebugTree());
         super.onCreate(savedInstanceState);
 
         HunterLoggerHandler.installLog(new HunterLoggerHandler() {

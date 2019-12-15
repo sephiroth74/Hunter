@@ -17,17 +17,13 @@ repositories {
     jcenter()
     mavenCentral()
     mavenLocal()
-    maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
+//    maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
 }
 
 def props = extensions.extraProperties.properties
 
 version = props.get('hunter.debug.transform.version')
 group = props.get('hunter.default.library.group')
-
-if (!version.endsWith('-SNAPSHOT')) {
-    version += '-' + (new Date().format('yyyyMMdd'))
-}
 
 def repoPath = props.get('hunter.repo.path')
 def repoUrl = props.get('hunter.repo.url')
@@ -64,20 +60,19 @@ def licenseName = props.get('hunter.license.name')
 //
 println(group + ':' + name + ':' + version)
 
-print("is local: " + is_local)
 
 if (is_local) {
-    apply plugin: 'maven'
-
-    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                repository(url: localRepoURL)
-            }
-        }
-    }
+//    apply plugin: 'maven'
+//
+//    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+//
+//    uploadArchives {
+//        repositories {
+//            mavenDeployer {
+//                repository(url: localRepoURL)
+//            }
+//        }
+//    }
 } else {
 
     apply plugin: 'com.bmuschko.nexus'

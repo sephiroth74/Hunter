@@ -12,7 +12,7 @@ buildscript {
 
     repositories {
         if (is_local) {
-            maven { url "~/.m2/reposiroty" }
+            maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
             mavenLocal()
         }
 
@@ -31,8 +31,9 @@ buildscript {
 allprojects {
     repositories {
         if (!is_local) {
-            maven { url props.get('sonatype.snapshots.url') }
-            maven { url props.get('sonatype.releases.url') }
+            def props = extensions.extraProperties.properties
+            maven { url "" + props.get('sonatype.snapshots.url') }
+            maven { url "" + props.get('sonatype.releases.url') }
         }
         google()
         jcenter()

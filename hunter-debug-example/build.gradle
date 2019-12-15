@@ -31,6 +31,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "org.apache.commons:commons-lang3:3.7"
     implementation "it.sephiroth.hunter:hunter-debug-library:$hunter_debug_library_version"
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 repositories {
@@ -47,8 +49,9 @@ repositories {
 buildscript {
     repositories {
         if (!is_local) {
-            maven { url props.get('sonatype.snapshots.url') }
-            maven { url props.get('sonatype.releases.url') }
+            def props = extensions.extraProperties.properties
+            maven { url "" + props.get('sonatype.snapshots.url') }
+            maven { url "" + props.get('sonatype.releases.url') }
         } else {
             maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
         }
