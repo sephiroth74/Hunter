@@ -11,5 +11,4 @@
 include ':hunter-transform'
 include ':hunter-debug-plugin'
 include ':hunter-debug-library'
-
 include ':hunter-debug-example'

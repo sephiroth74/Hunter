@@ -13,55 +13,116 @@ dependencies {
 }
 
 repositories {
-    maven {
-        url uri('../repo')
-    }
     google()
     jcenter()
     mavenCentral()
+    mavenLocal()
+    maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
 }
 
 def props = extensions.extraProperties.properties
-version = props.get('hunter.debug.transform.version') + '-' + (new Date().format('yyyyMMdd'))
-group   = props.get('hunter.default.library.group')
 
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = name
+version = props.get('hunter.debug.transform.version')
+group = props.get('hunter.default.library.group')
 
-    publishedGroupId = group
-    libraryName = name
-    artifact = name
-
-    libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
-
-    siteUrl = 'https://github.com/Leaking/Hunter'
-    gitUrl = 'https://github.com/Leaking/Hunter.git'
-
-    libraryVersion = version
-
-    developerId = 'Leaking'
-    developerName = 'QuinnChen'
-    developerEmail = 'chenhuazhaoao@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
+if (!version.endsWith('-SNAPSHOT')) {
+    version += '-' + (new Date().format('yyyyMMdd'))
 }
 
+def repoPath = props.get('hunter.repo.path')
+def repoUrl = props.get('hunter.repo.url')
+def licenseUrl = props.get('hunter.license.url')
+def licenseName = props.get('hunter.license.name')
+//
+//ext {
+//    bintrayRepo = 'maven'
+//    bintrayName = name
+//
+//    publishedGroupId = group
+//    libraryName = name
+//    artifact = name
+//
+//    libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
+//
+//    siteUrl = baseurl
+//    gitUrl = baseurl = props.get('hunter.baseurl') + '.git'
+//
+//    libraryVersion = version
+//
+//    developerId = 'Leaking'
+//    developerName = 'QuinnChen'
+//    developerEmail = 'chenhuazhaoao@gmail.com'
+//
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = ["Apache-2.0"]
+//}
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
-apply plugin: 'maven'
 
-print(group + ':' + name + ':' + version)
+//
+println(group + ':' + name + ':' + version)
 
-def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+print("is local: " + is_local)
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: localRepoURL)
+if (is_local) {
+    apply plugin: 'maven'
+
+    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: localRepoURL)
+            }
         }
+    }
+} else {
+
+    apply plugin: 'com.bmuschko.nexus'
+
+    modifyPom {
+        project {
+            name 'Hunter Transform'
+            description 'Transform plugin for android projects.'
+            url repoUrl
+
+            scm {
+                url repoUrl
+                connection 'scm:https://git@' + repoPath + '.git'
+                developerConnection 'scm:git://' + repoPath + '.git'
+            }
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id props.get('hunter.developer.id')
+                    name props.get('hunter.developer.name')
+                    email props.get('hunter.developer.email')
+                    roles 'architect', 'developer'
+                }
+            }
+            contributors {
+                contributor {
+                    name props.get('hunter.contributor1.name')
+                    email props.get('hunter.contributor1.email')
+                    roles 'developer'
+                }
+            }
+        }
+    }
+
+    extraArchive {
+        sources = true
+        tests = false
+        javadoc = true
     }
 }
