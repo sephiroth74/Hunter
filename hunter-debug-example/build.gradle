@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+def props = extensions.extraProperties.properties
+
 android {
     compileSdkVersion 29
     defaultConfig {
@@ -27,33 +29,41 @@ dependencies {
     def appcompat_version = "1.1.0"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation 'org.apache.commons:commons-lang3:3.7'
-    implementation(name: 'hunter-debug-library-debug', ext: 'aar')
+    implementation "org.apache.commons:commons-lang3:3.7"
+    implementation "it.sephiroth.hunter:hunter-debug-library:$hunter_debug_library_version"
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 repositories {
-    jcenter()
     google()
-    mavenLocal()
-    flatDir { dir "$rootDir/hunter-debug-library/build/outputs/aar" }
+    jcenter()
+    if (!is_local) {
+        maven { url props.get('sonatype.snapshots.url') }
+        maven { url props.get('sonatype.releases.url') }
+    } else {
+        maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
+    }
 }
 
 buildscript {
     repositories {
+        if (!is_local) {
+            def props = extensions.extraProperties.properties
+            maven { url "" + props.get('sonatype.snapshots.url') }
+            maven { url "" + props.get('sonatype.releases.url') }
+        } else {
+            maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
+        }
         jcenter()
         google()
-        mavenLocal()
     }
 
     dependencies {
-//        classpath 'com.quinn.hunter:hunter-debug-plugin:1.0.0-SNAPSHOT'
-//        classpath 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
-        classpath fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
-        classpath fileTree(include: ['*.jar'], dir: "$rootDir/hunter-debug-plugin/build/libs")
+        classpath "it.sephiroth.hunter:hunter-debug-plugin:$hunter_debug_plugin_version"
+        classpath "it.sephiroth.hunter:hunter-transform:$hunter_transform_version"
     }
 }
-
-evaluationDependsOn(':hunter-debug-library')
 
 apply plugin: 'hunter-debug'
 

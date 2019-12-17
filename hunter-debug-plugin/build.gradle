@@ -1,5 +1,13 @@
 apply plugin: 'groovy'
 
+def props = extensions.extraProperties.properties
+version = props.get('hunter.debug.plugin.version')
+group = props.get('hunter.default.library.group')
+def repoPath = props.get('hunter.repo.path')
+def repoUrl = props.get('hunter.repo.url')
+def licenseUrl = props.get('hunter.license.url')
+def licenseName = props.get('hunter.license.name')
+
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
@@ -13,62 +21,115 @@ dependencies {
     implementation "org.ow2.asm:asm-util:$asm_version"
     //noinspection GradleDependency
     implementation "org.ow2.asm:asm-commons:$asm_version"
-//    implementation 'com.quinn.hunter:hunter-transform:0.9.3'
-//    implementation 'com.quinn.hunter:hunter-transform:1.0.0-SNAPSHOT'
-    implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
+//    implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
+    implementation "it.sephiroth.hunter:hunter-transform:$hunter_transform_version"
 }
 
 repositories {
     google()
     jcenter()
     mavenCentral()
+
+    if (is_local) {
+        mavenLocal()
+        maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
+    }
 }
 
-def props = extensions.extraProperties.properties
-version = props.get('hunter.debug.plugin.version') + '-' + (new Date().format('yyyyMMdd'))
-group   = props.get('hunter.default.library.group')
-
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = name
-
-    publishedGroupId = group
-    libraryName = name
-    artifact = name
-
-    libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
-
-    siteUrl = 'https://github.com/Leaking/Hunter'
-    gitUrl = 'https://github.com/Leaking/Hunter.git'
-
-    libraryVersion = version
-
-    developerId = 'Leaking'
-    developerName = 'QuinnChen'
-    developerEmail = 'chenhuazhaoao@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
+//
+//ext {
+//    bintrayRepo = 'maven'
+//    bintrayName = name
+//
+//    publishedGroupId = group
+//    libraryName = name
+//    artifact = name
+//
+//    libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
+//
+//    siteUrl = baseurl
+//    gitUrl = baseurl + '.git'
+//
+//    libraryVersion = version
+//
+//    developerId = 'Leaking'
+//    developerName = 'QuinnChen'
+//    developerEmail = 'chenhuazhaoao@gmail.com'
+//
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = ["Apache-2.0"]
+//}
 
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
 //publish script for debug mode
 
-evaluationDependsOn(':hunter-transform')
+//evaluationDependsOn(':hunter-transform')
 
-apply plugin: 'maven'
 
-print(group + ':' + name + ':' + version)
+println(group + ':' + name + ':' + version)
 
-def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+if (is_local) {
+    apply plugin: 'maven'
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: localRepoURL)
+    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: localRepoURL)
+            }
         }
     }
+
+} else {
+
+    apply plugin: 'com.bmuschko.nexus'
+
+    modifyPom {
+        project {
+            name 'Hunter Debug Plugin'
+            description 'Debug Plugin for Android'
+            url repoUrl
+
+            scm {
+                url repoUrl
+                connection 'scm:https://git@' + repoPath + '.git'
+                developerConnection 'scm:git://' + repoPath + '.git'
+            }
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id props.get('hunter.developer.id')
+                    name props.get('hunter.developer.name')
+                    email props.get('hunter.developer.email')
+                    roles 'architect', 'developer'
+                }
+            }
+            contributors {
+                contributor {
+                    name props.get('hunter.contributor1.name')
+                    email props.get('hunter.contributor1.email')
+                    roles 'developer'
+                }
+            }
+        }
+    }
+
+    extraArchive {
+        sources = true
+        tests = false
+        javadoc = true
+    }
+
 }
