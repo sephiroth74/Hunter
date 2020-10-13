@@ -1,8 +1,10 @@
 apply plugin: 'groovy'
 
 def props = extensions.extraProperties.properties
-version = props.get('hunter.debug.plugin.version')
+
+version = props.get('hunter.library.version')
 group = props.get('hunter.default.library.group')
+
 def repoPath = props.get('hunter.repo.path')
 def repoUrl = props.get('hunter.repo.url')
 def licenseUrl = props.get('hunter.license.url')
@@ -12,17 +14,17 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation 'com.android.tools.build:gradle:3.5.3'
-    implementation 'com.android.tools.build:gradle-api:3.5.3'
+    implementation 'com.android.tools.build:gradle-api:3.5.4'
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.10'
     //noinspection GradleDependency
-    implementation "org.ow2.asm:asm:$asm_version"
+    implementation "org.ow2.asm:asm:${asm_version}"
     //noinspection GradleDependency
-    implementation "org.ow2.asm:asm-util:$asm_version"
+    implementation "org.ow2.asm:asm-util:${asm_version}"
     //noinspection GradleDependency
-    implementation "org.ow2.asm:asm-commons:$asm_version"
-//    implementation fileTree(include: ['*.jar'], dir: "$rootDir/hunter-transform/build/libs")
-    implementation "it.sephiroth.hunter:hunter-transform:$hunter_transform_version"
+    implementation "org.ow2.asm:asm-commons:${asm_version}"
+//    implementation 'com.quinn.hunter:hunter-transform:1.0.0'
+    implementation "it.sephiroth.hunter:hunter-transform:$hunter_version"
 }
 
 repositories {

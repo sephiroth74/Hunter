@@ -14,7 +14,7 @@ public class DebugPreGoClassAnnotationAdapter extends AnnotationVisitor {
     private int logLevel = Constants.LOG_LEVEL;
 
     public DebugPreGoClassAnnotationAdapter(final AnnotationVisitor av, DebugPreGoClassAdapter.ClassCollector callback) {
-        super(Opcodes.ASM5, av);
+        super(Opcodes.ASM6, av);
         this.callback = callback;
     }
 

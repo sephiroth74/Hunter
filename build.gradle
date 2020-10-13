@@ -4,11 +4,12 @@
 buildscript {
     def props = extensions.extraProperties.properties
 
-    ext.asm_version = '7.0'
+    ext.kotlin_version = "1.4.10"
+    ext.asm_version = '6.0'
+    ext.hunter_version = props.get('hunter.library.version')
+    ext.hunter_library_group = props.get('hunter.default.library.group')
+
     ext.is_local = Boolean.parseBoolean(useLocalRepo)
-    ext.hunter_transform_version = props.get('hunter.debug.transform.version')
-    ext.hunter_debug_plugin_version = props.get('hunter.debug.plugin.version')
-    ext.hunter_debug_library_version = props.get('hunter.debug.library.version')
 
     repositories {
         if (is_local) {
@@ -21,23 +22,26 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.5.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 allprojects {
     repositories {
         if (!is_local) {
-            def props = extensions.extraProperties.properties
-            maven { url "" + props.get('sonatype.snapshots.url') }
-            maven { url "" + props.get('sonatype.releases.url') }
+            maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+            maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+        } else {
+            maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
         }
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 

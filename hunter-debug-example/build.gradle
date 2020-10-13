@@ -1,6 +1,32 @@
-apply plugin: 'com.android.application'
 
-def props = extensions.extraProperties.properties
+buildscript {
+    repositories {
+        if (is_local) {
+            maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
+        }
+
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    }
+
+    dependencies {
+        classpath "it.sephiroth.hunter:hunter-debug-plugin:$hunter_version"
+        classpath "it.sephiroth.hunter:hunter-transform:$hunter_version"
+    }
+}
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+apply plugin: 'hunter-debug'
 
 android {
     compileSdkVersion 29
@@ -22,50 +48,26 @@ android {
         abortOnError false
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 
 dependencies {
-    def appcompat_version = "1.1.0"
+    def appcompat_version = "1.2.0"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "org.apache.commons:commons-lang3:3.7"
-    implementation "it.sephiroth.hunter:hunter-debug-library:$hunter_debug_library_version"
+    implementation "it.sephiroth.hunter:hunter-debug-library:$hunter_version"
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
-repositories {
-    google()
-    jcenter()
-    if (!is_local) {
-        maven { url props.get('sonatype.snapshots.url') }
-        maven { url props.get('sonatype.releases.url') }
-    } else {
-        maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
-    }
-}
-
-buildscript {
-    repositories {
-        if (!is_local) {
-            def props = extensions.extraProperties.properties
-            maven { url "" + props.get('sonatype.snapshots.url') }
-            maven { url "" + props.get('sonatype.releases.url') }
-        } else {
-            maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
-        }
-        jcenter()
-        google()
-    }
-
-    dependencies {
-        classpath "it.sephiroth.hunter:hunter-debug-plugin:$hunter_debug_plugin_version"
-        classpath "it.sephiroth.hunter:hunter-transform:$hunter_transform_version"
-    }
-}
-
-apply plugin: 'hunter-debug'
 
 debugHunterExt {
     debugResult false

@@ -13,7 +13,7 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
 
     public DebugPreGoMethodAnnotationAdapter(
             final MethodDataHolder method, final AnnotationVisitor av) {
-        super(Opcodes.ASM5, av);
+        super(Opcodes.ASM6, av);
         this.method = method;
     }
 

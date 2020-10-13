@@ -29,7 +29,7 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     private HashMap<String, MethodDataHolder> includes = new HashMap<>();
 
     public DebugPreGoClassAdapter(final ClassVisitor cv) {
-        super(Opcodes.ASM5, cv);
+        super(Opcodes.ASM6, cv);
     }
 
     @Override

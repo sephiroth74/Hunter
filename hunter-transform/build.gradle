@@ -3,13 +3,13 @@ apply plugin: 'java-library'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation "com.android.tools.build:gradle:3.5.3"
-    implementation "com.android.tools.build:gradle-api:3.5.3"
-    implementation "commons-io:commons-io:2.6"
-    implementation "commons-codec:commons-codec:1.10"
-    implementation "org.ow2.asm:asm:$asm_version"
-    implementation "org.ow2.asm:asm-util:$asm_version"
-    implementation "org.ow2.asm:asm-commons:$asm_version"
+    implementation 'com.android.tools.build:gradle:3.5.3'
+    implementation 'com.android.tools.build:gradle-api:3.5.4'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.10'
+    implementation "org.ow2.asm:asm:${asm_version}"
+    implementation "org.ow2.asm:asm-util:${asm_version}"
+    implementation "org.ow2.asm:asm-commons:${asm_version}"
 }
 
 repositories {
@@ -17,12 +17,11 @@ repositories {
     jcenter()
     mavenCentral()
     mavenLocal()
-//    maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
 }
 
 def props = extensions.extraProperties.properties
 
-version = props.get('hunter.debug.transform.version')
+version = props.get('hunter.library.version')
 group = props.get('hunter.default.library.group')
 
 def repoPath = props.get('hunter.repo.path')
@@ -62,20 +61,23 @@ println(group + ':' + name + ':' + version)
 
 
 if (is_local) {
-//    apply plugin: 'maven'
-//
-//    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
-//
-//    uploadArchives {
-//        repositories {
-//            mavenDeployer {
-//                repository(url: localRepoURL)
-//            }
-//        }
-//    }
+    apply plugin: 'maven'
+
+    def localRepoURL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: localRepoURL)
+            }
+        }
+    }
 } else {
 
     apply plugin: 'com.bmuschko.nexus'
+
+
+    println('nexusUsername: ' + nexusUsername)
 
     modifyPom {
         project {

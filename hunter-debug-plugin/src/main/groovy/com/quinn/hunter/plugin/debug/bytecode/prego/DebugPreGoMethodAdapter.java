@@ -37,7 +37,7 @@ public class DebugPreGoMethodAdapter extends MethodVisitor implements Opcodes {
             boolean needParameter,
             DebugPreGoClassAdapter.MethodCollector methodCollector) {
 
-        super(Opcodes.ASM5, mv);
+        super(Opcodes.ASM6, mv);
         this.method = method;
         this.methodKey = methodKey;
         this.methodParametersMap = methodParametersMap;
