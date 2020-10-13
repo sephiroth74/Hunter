@@ -71,5 +71,5 @@ dependencies {
 
 debugHunterExt {
     debugResult false
-    logLevel 6
+    logLevel 2
 }

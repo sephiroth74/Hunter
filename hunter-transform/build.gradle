@@ -19,44 +19,17 @@ repositories {
     mavenLocal()
 }
 
+
+version = rootProject.ext.hunter_version
+group = rootProject.ext.hunter_library_group
+
 def props = extensions.extraProperties.properties
-
-version = props.get('hunter.library.version')
-group = props.get('hunter.default.library.group')
-
 def repoPath = props.get('hunter.repo.path')
 def repoUrl = props.get('hunter.repo.url')
 def licenseUrl = props.get('hunter.license.url')
 def licenseName = props.get('hunter.license.name')
-//
-//ext {
-//    bintrayRepo = 'maven'
-//    bintrayName = name
-//
-//    publishedGroupId = group
-//    libraryName = name
-//    artifact = name
-//
-//    libraryDescription = 'A fast, incremental, cocurrent framework to develop compile plugin for android project'
-//
-//    siteUrl = baseurl
-//    gitUrl = baseurl = props.get('hunter.baseurl') + '.git'
-//
-//    libraryVersion = version
-//
-//    developerId = 'Leaking'
-//    developerName = 'QuinnChen'
-//    developerEmail = 'chenhuazhaoao@gmail.com'
-//
-//    licenseName = 'The Apache Software License, Version 2.0'
-//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//    allLicenses = ["Apache-2.0"]
-//}
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
 
-//
 println(group + ':' + name + ':' + version)
 
 

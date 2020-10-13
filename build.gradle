@@ -5,11 +5,17 @@ buildscript {
     def props = extensions.extraProperties.properties
 
     ext.kotlin_version = "1.4.10"
-    ext.asm_version = '6.0'
+    ext.asm_version = props.get('asmVersion')
     ext.hunter_version = props.get('hunter.library.version')
-    ext.hunter_library_group = props.get('hunter.default.library.group')
-
+    ext.hunter_library_group = props.get('hunter.library.group')
     ext.is_local = Boolean.parseBoolean(useLocalRepo)
+
+    println("ext:")
+    println("   kotlin_version: ${kotlin_version}")
+    println("   asm_version: ${asm_version}")
+    println("   hunter_version: ${hunter_version}")
+    println("   hunter_library_group: ${hunter_library_group}")
+    println("   is_local: ${is_local}")
 
     repositories {
         if (is_local) {
