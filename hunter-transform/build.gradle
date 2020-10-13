@@ -76,9 +76,6 @@ if (is_local) {
 
     apply plugin: 'com.bmuschko.nexus'
 
-
-    println('nexusUsername: ' + nexusUsername)
-
     modifyPom {
         project {
             name 'Hunter Transform'

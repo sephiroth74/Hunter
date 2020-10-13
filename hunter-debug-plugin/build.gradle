@@ -27,17 +27,6 @@ dependencies {
     implementation "it.sephiroth.hunter:hunter-transform:$hunter_version"
 }
 
-repositories {
-    google()
-    jcenter()
-    mavenCentral()
-
-    if (is_local) {
-        mavenLocal()
-        maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
-    }
-}
-
 //
 //ext {
 //    bintrayRepo = 'maven'
