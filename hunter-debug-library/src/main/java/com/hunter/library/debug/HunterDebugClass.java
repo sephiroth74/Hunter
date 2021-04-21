@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 public @interface HunterDebugClass {
     boolean debugResult() default true;
     int logLevel() default Log.INFO;
+    boolean debugArguments() default true;
 }

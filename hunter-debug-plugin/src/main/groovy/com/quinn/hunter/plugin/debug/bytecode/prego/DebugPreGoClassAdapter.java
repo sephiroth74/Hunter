@@ -26,10 +26,11 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     private boolean classDebug = false;
     private int logLevel = Constants.LOG_LEVEL;
     private boolean debugOutput = Constants.DEBUG_RESULT;
+    private boolean debugArguments = Constants.DEBUG_ARGUMENTS;
     private HashMap<String, MethodDataHolder> includes = new HashMap<>();
 
     public DebugPreGoClassAdapter(final ClassVisitor cv) {
-        super(Opcodes.ASM6, cv);
+        super(Opcodes.ASM7, cv);
     }
 
     @Override
@@ -46,9 +47,10 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor origin = super.visitAnnotation(desc, visible);
         if ("Lcom/hunter/library/debug/HunterDebugClass;".equals(desc)) {
-            origin = new DebugPreGoClassAnnotationAdapter(origin, (output, level) -> {
+            origin = new DebugPreGoClassAnnotationAdapter(origin, (output, level, arguments) -> {
                 debugOutput = output;
                 logLevel = level;
+                debugArguments = arguments;
             });
             classDebug = true;
         }
@@ -66,12 +68,12 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
         MethodDataHolder methodDataHolder = new MethodDataHolder(name, desc);
         methodDataHolder.setDebugOutput(debugOutput);
         methodDataHolder.setLogLevel(logLevel);
+        methodDataHolder.setDebugArguments(debugArguments);
 
         debugPreGoMethodAdapter =
                 new DebugPreGoMethodAdapter(methodDataHolder, methodUniqueKey, methodParametersMap, mv, classDebug,
                         method -> {
                             includes.put(method.getMethodUniqueKey(), methodDataHolder);
-                            //System.out.println("method: " + methodDataHolder.toString());
                             needParameter = true;
                         }
                 );
@@ -90,11 +92,12 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
         return needParameter;
     }
 
+
     interface MethodCollector {
         void onIncludeMethod(MethodDataHolder method);
     }
 
     interface ClassCollector {
-        void onIncludeClass(boolean debugOutput, int logLevel);
+        void onIncludeClass(boolean debugOutput, int logLevel, boolean debugArguments);
     }
 }

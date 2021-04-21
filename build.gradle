@@ -19,6 +19,8 @@ buildscript {
 
     repositories {
         if (is_local) {
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        google()
             maven { url 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath }
             mavenLocal()
         }
@@ -28,9 +30,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }

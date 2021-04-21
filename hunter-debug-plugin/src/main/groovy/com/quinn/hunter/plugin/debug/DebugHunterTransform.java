@@ -34,10 +34,11 @@ public class DebugHunterTransform extends HunterTransform {
     @Override
     public void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs, TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
         debugHunterExtension = (DebugHunterExtension) project.getExtensions().getByName("debugHunterExt");
-        System.out.println(String.format("transform. debugResult: %s, logLevel: %s", debugHunterExtension.debugResult, debugHunterExtension.logLevel));
+        System.out.println(String.format("transform. debugResult: %s, logLevel: %s, debugArguments: %s", debugHunterExtension.debugResult, debugHunterExtension.logLevel, debugHunterExtension.debugArguments));
 
         Constants.DEBUG_RESULT = debugHunterExtension.debugResult;
         Constants.LOG_LEVEL = debugHunterExtension.logLevel;
+        Constants.DEBUG_ARGUMENTS = debugHunterExtension.debugArguments;
 
         super.transform(context, inputs, referencedInputs, outputProvider, isIncremental);
     }
@@ -48,13 +49,18 @@ public class DebugHunterTransform extends HunterTransform {
     }
 
     @Override
-    protected boolean inDuplcatedClassSafeMode() {
+    protected boolean inDuplicatedClassSafeMode() {
         return debugHunterExtension.duplcatedClassSafeMode;
     }
 
     @Override
     protected boolean getDebugResult() {
         return debugHunterExtension.debugResult;
+    }
+
+    @Override
+    protected boolean getDebugArguments() {
+        return debugHunterExtension.debugArguments;
     }
 
     @Override

@@ -25,7 +25,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
 
     public DebugMethodAdapter(
             String className, List<Parameter> parameters, MethodDataHolder method, int access, String desc, MethodVisitor mv) {
-        super(Opcodes.ASM6, access, desc, mv);
+        super(Opcodes.ASM7, access, desc, mv);
         if (!className.endsWith("/")) {
             this.className = className.substring(className.lastIndexOf("/") + 1);
         } else {
@@ -47,8 +47,9 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
         mv.visitInsn(DUP);
         mv.visitLdcInsn(className);
         mv.visitLdcInsn(method.getName());
+        mv.visitLdcInsn(method.isDebugArguments());
         mv.visitMethodInsn(
-                INVOKESPECIAL, Constants.PARAM_PRINTER_CLASS, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+                INVOKESPECIAL, Constants.PARAM_PRINTER_CLASS, "<init>", "(Ljava/lang/String;Ljava/lang/String;Z)V", false);
         mv.visitVarInsn(ASTORE, printUtilsVarIndex);
         for (int i = 0; i < parameters.size(); i++) {
             Parameter parameter = parameters.get(i);
@@ -121,7 +122,7 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
             } else {
                 mv.visitInsn(level);
             }
-
+            mv.visitLdcInsn(method.isDebugArguments());
             mv.visitLdcInsn(className);    //parameter 1 string
             mv.visitLdcInsn(method.getName());   //parameter 2 string
             mv.visitVarInsn(LLOAD, index); //parameter 3 long
@@ -133,14 +134,14 @@ public final class DebugMethodAdapter extends LocalVariablesSorter implements Op
                     returnDesc = "Ljava/lang/Object;";
                 }
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
-                String formatDesc = String.format("(ILjava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
+                String formatDesc = String.format("(IZLjava/lang/String;Ljava/lang/String;J%s)V", returnDesc);
                 mv.visitMethodInsn(INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "print", formatDesc, false);
                 mv.visitVarInsn(loadOpcode, resultTempValIndex);
             } else {
                 mv.visitLdcInsn("void");
                 mv.visitMethodInsn(
                         INVOKESTATIC, Constants.RESULT_PRINTER_CLASS, "print",
-                        "(ILjava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false
+                        "(IZLjava/lang/String;Ljava/lang/String;JLjava/lang/Object;)V", false
                 );
             }
         }

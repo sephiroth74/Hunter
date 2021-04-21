@@ -9,6 +9,7 @@ public class MethodDataHolder {
     private boolean debugOutput = Constants.DEBUG_RESULT;
     private boolean debugInput = true;
     private int logLevel = Constants.LOG_LEVEL;
+    private boolean debugArguments = Constants.DEBUG_ARGUMENTS;
 
     public MethodDataHolder(String n, String key) {
         this.name = n;
@@ -34,6 +35,14 @@ public class MethodDataHolder {
     public void setDebugEnabled(final boolean debugEnabled) {
         this.debugEnabled = debugEnabled;
     }
+
+    public boolean isDebugArguments() {
+        return debugArguments;
+    }
+
+    public void setDebugArguments(final boolean value) {
+        this.debugArguments = value;
+    }    
 
     public boolean isDebugOutput() {
         return debugOutput;

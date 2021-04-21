@@ -11,6 +11,8 @@ public class DebugHunterExtension {
 
     public int logLevel = Constants.LOG_LEVEL;
 
+    public boolean debugArguments = Constants.DEBUG_ARGUMENTS;
+
     public RunVariant runVariant = RunVariant.ALWAYS;
 
     public boolean duplcatedClassSafeMode = false;
@@ -19,6 +21,8 @@ public class DebugHunterExtension {
 
     public void logLevel(int level) { this.logLevel = level; }
 
+    public void debugArguments(boolean value) { this.debugArguments = value; }
+
     @Override
     public String toString() {
         return "DebugHunterExtension{" +
@@ -26,6 +30,7 @@ public class DebugHunterExtension {
             ", duplcatedClassSafeMode=" + duplcatedClassSafeMode +
             ", debugResult=" + debugResult +
             ", logLevel=" + logLevel +
+            ", debugArguments=" + debugArguments + 
             '}';
     }
 }

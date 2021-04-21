@@ -1,6 +1,8 @@
 package com.hunter.library.debug;
 
+import java.lang.*;
 import java.util.Arrays;
+import java.lang.reflect.Array;
 
 @SuppressWarnings("unused")
 public class ParameterPrinter {
@@ -13,10 +15,12 @@ public class ParameterPrinter {
 
     private String tag;
 
-    public ParameterPrinter(String tag, String methodName) {
+    private boolean printArguments = true;
+
+    public ParameterPrinter(String tag, String methodName, boolean printArguments) {
         this.tag = tag;
         this.methodName = methodName;
-//        paramsList.append("⇢ ").append(methodName).append("[");
+        this.printArguments = printArguments;
     }
 
     public ParameterPrinter append(String name, int val) {
@@ -88,11 +92,31 @@ public class ParameterPrinter {
             paramsList.append(divider);
         }
         if (val != null && val.getClass().isArray()) {
-            paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
-        } else {
+            if (printArguments) {
+                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
+            } else {
+                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToHashCode(val)));
+            }
+        } else if (val != null && val instanceof String) {
             paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+        } else {
+            if (printArguments) {
+                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+            } else {
+                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, objectToHashCode(val)));
+            }
         }
         return this;
+    }
+
+    static String objectToHashCode(Object val) {
+        if(val == null) return "null";
+        return val.getClass().getName() + "#" + System.identityHashCode(val);
+    }
+
+    static String arrayToHashCode(Object val) {
+        if(val == null) return "null";
+        return val.getClass().getName() + "#" + System.identityHashCode(val) + "[size=" + Array.getLength(val) + "]";
     }
 
     private String arrayToString(Object val) {
@@ -122,7 +146,6 @@ public class ParameterPrinter {
     }
 
     public void print(int level) {
-//        paramsList.append("]");
         HunterLoggerHandler.DEFAULT_IMPL.logEnter(level, tag, methodName, paramsList.toString());
     }
 }

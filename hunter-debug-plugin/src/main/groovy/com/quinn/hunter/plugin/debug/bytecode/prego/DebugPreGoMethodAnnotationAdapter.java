@@ -13,7 +13,7 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
 
     public DebugPreGoMethodAnnotationAdapter(
             final MethodDataHolder method, final AnnotationVisitor av) {
-        super(Opcodes.ASM6, av);
+        super(Opcodes.ASM7, av);
         this.method = method;
     }
 
@@ -23,6 +23,8 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
             method.setDebugOutput((boolean) value);
         } else if ("logLevel".equals(name)) {
             method.setLogLevel((int) value);
+        } else if ("debugArguments".equals(name)) {
+            method.setDebugArguments((boolean) value);
         }
 
         super.visit(name, value);

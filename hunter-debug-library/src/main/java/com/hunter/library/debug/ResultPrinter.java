@@ -4,44 +4,53 @@ import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class ResultPrinter {
-
-    public static void print(int level, String className, String methodName, long costedMillis, byte returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, byte returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, char returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, char returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, short returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, short returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, int returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, int returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, boolean returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, boolean returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, long returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, long returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, float returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, float returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, double returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, double returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, String className, String methodName, long costedMillis, Object returnVal) {
+    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, Object returnVal) {
         if (returnVal != null && returnVal.getClass().isArray()) {
-            HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, arrayToString(returnVal));
-        } else {
+            if (printArguments) {
+                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, arrayToString(returnVal));
+            } else {
+                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.arrayToHashCode(returnVal));
+            }
+        } else if (returnVal instanceof String) {
             HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
+        } else {
+            if (printArguments) {
+                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
+            } else {
+                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.objectToHashCode(returnVal) + "");
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public final class DebugClassAdapter extends ClassVisitor {
     private HashMap<String, MethodDataHolder> includeMethods = new HashMap<>();
 
     DebugClassAdapter(final ClassVisitor cv, final Map<String, List<Parameter>> methodParametersMap) {
-        super(Opcodes.ASM6, cv);
+        super(Opcodes.ASM7, cv);
         this.methodParametersMap = methodParametersMap;
     }
 

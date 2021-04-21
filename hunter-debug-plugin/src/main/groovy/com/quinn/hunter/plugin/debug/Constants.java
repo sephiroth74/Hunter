@@ -8,6 +8,8 @@ package com.quinn.hunter.plugin.debug;
 public class Constants {
     public static boolean DEBUG_RESULT = true;
 
+    public static boolean DEBUG_ARGUMENTS = true;
+
     public static int LOG_LEVEL = 4; // Log.INFO
 
     public static final String PARAM_PRINTER_CLASS = "com/hunter/library/debug/ParameterPrinter";
