@@ -59,7 +59,7 @@ public class DebugHunterTransform extends HunterTransform {
     }
 
     @Override
-    protected boolean getDebugArguments() {
+    protected int getDebugArguments() {
         return debugHunterExtension.debugArguments;
     }
 

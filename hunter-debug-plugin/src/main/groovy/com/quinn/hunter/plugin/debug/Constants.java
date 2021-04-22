@@ -6,9 +6,15 @@ package com.quinn.hunter.plugin.debug;
  * @author Alessandro Crugnola on 2019-12-09 - 14:39
  */
 public class Constants {
+    public static final int ARGUMENTS_NONE = 0;
+
+    public static final int ARGUMENTS_SHORT = 1;
+
+    public static final int ARGUMENTS_FULL = 2;
+
     public static boolean DEBUG_RESULT = true;
 
-    public static boolean DEBUG_ARGUMENTS = true;
+    public static int DEBUG_ARGUMENTS = ARGUMENTS_FULL;
 
     public static int LOG_LEVEL = 4; // Log.INFO
 

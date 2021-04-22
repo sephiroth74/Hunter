@@ -11,7 +11,7 @@ public class DebugPreGoClassAnnotationAdapter extends AnnotationVisitor {
     private final DebugPreGoClassAdapter.ClassCollector callback;
 
     private boolean debugResult = Constants.DEBUG_RESULT;
-    private boolean debugArguments = Constants.DEBUG_ARGUMENTS;
+    private int debugArguments = Constants.DEBUG_ARGUMENTS;
     private int logLevel = Constants.LOG_LEVEL;
 
     public DebugPreGoClassAnnotationAdapter(final AnnotationVisitor av, DebugPreGoClassAdapter.ClassCollector callback) {
@@ -23,7 +23,7 @@ public class DebugPreGoClassAnnotationAdapter extends AnnotationVisitor {
         return debugResult;
     }
 
-    public boolean isDebugArguments() {
+    public int getDebugArguments() {
         return debugArguments;
     }
 
@@ -38,7 +38,7 @@ public class DebugPreGoClassAnnotationAdapter extends AnnotationVisitor {
         } else if ("logLevel".equals(name)) {
             logLevel = (int) value;
         } else if ("debugArguments".equals(name)) {
-            debugArguments = (boolean) value;
+            debugArguments = (int) value;
         }
 
         super.visit(name, value);

@@ -70,6 +70,7 @@ dependencies {
 
 
 debugHunterExt {
+    debugArguments 1
     debugResult false
     logLevel 2
 }

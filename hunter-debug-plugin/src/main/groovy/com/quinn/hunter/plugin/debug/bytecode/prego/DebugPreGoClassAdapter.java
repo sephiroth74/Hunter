@@ -26,7 +26,7 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     private boolean classDebug = false;
     private int logLevel = Constants.LOG_LEVEL;
     private boolean debugOutput = Constants.DEBUG_RESULT;
-    private boolean debugArguments = Constants.DEBUG_ARGUMENTS;
+    private int debugArguments = Constants.DEBUG_ARGUMENTS;
     private HashMap<String, MethodDataHolder> includes = new HashMap<>();
 
     public DebugPreGoClassAdapter(final ClassVisitor cv) {
@@ -98,6 +98,6 @@ public final class DebugPreGoClassAdapter extends ClassVisitor {
     }
 
     interface ClassCollector {
-        void onIncludeClass(boolean debugOutput, int logLevel, boolean debugArguments);
+        void onIncludeClass(boolean debugOutput, int logLevel, int debugArguments);
     }
 }

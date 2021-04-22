@@ -12,9 +12,8 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.CLASS)
-@SuppressWarnings ("DefaultAnnotationParam")
 public @interface HunterDebug {
     boolean debugResult() default true;
     int logLevel() default Log.INFO;
-    boolean debugArguments() default true;
+    int debugArguments() default Constants.ARGUMENTS_FULL;
 }

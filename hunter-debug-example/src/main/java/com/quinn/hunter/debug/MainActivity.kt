@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
+import com.hunter.library.debug.Constants
 import com.hunter.library.debug.HunterDebug
 import com.hunter.library.debug.HunterLoggerHandler
 import com.quinn.hunter.debug.test.ClassTest
@@ -77,7 +78,7 @@ class MainActivity : Activity() {
     }
 
     private val paramNames: List<String> = ArrayList()
-    @HunterDebug(debugResult = false, logLevel = Log.ERROR)
+    @HunterDebug(debugResult = false, logLevel = Log.ERROR, debugArguments = Constants.ARGUMENTS_FULL)
     private fun method_test_parameter(bool_v: Boolean, byte_v: Byte, char_v: Char, short_v: Short, int_v: Int, long_v: Long, float_v: Float, double_v: Double, string_v: String, arr: IntArray, savedInstanceState: Bundle?): Int {
         val insideLocal = 5
         val insideLocal2 = 6

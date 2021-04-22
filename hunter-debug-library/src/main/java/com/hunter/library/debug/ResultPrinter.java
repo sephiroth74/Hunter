@@ -4,52 +4,56 @@ import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class ResultPrinter {
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, byte returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, byte returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, char returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, char returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, short returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, short returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, int returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, int returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, boolean returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, boolean returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, long returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, long returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, float returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, float returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, double returnVal) {
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, double returnVal) {
         HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
     }
 
-    public static void print(int level, boolean printArguments, String className, String methodName, long costedMillis, Object returnVal) {
-        if (returnVal != null && returnVal.getClass().isArray()) {
-            if (printArguments) {
-                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, arrayToString(returnVal));
-            } else {
-                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.arrayToHashCode(returnVal));
-            }
-        } else if (returnVal instanceof String) {
-            HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
+    public static void print(int level, int printArguments, String className, String methodName, long costedMillis, Object returnVal) {
+        if (printArguments == Constants.ARGUMENTS_NONE) {
+            HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, "");
         } else {
-            if (printArguments) {
+            if (returnVal != null && returnVal.getClass().isArray()) {
+                if (printArguments == Constants.ARGUMENTS_FULL) {
+                    HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, arrayToString(returnVal));
+                } else if (printArguments == Constants.ARGUMENTS_SHORT) {
+                    HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.arrayToHashCode(returnVal));
+                }
+            } else if (returnVal instanceof String) {
                 HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
             } else {
-                HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.objectToHashCode(returnVal) + "");
+                if (printArguments == Constants.ARGUMENTS_FULL) {
+                    HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
+                } else if (printArguments == Constants.ARGUMENTS_SHORT) {
+                    HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.objectToHashCode(returnVal) + "");
+                }
             }
         }
     }

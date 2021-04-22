@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 
-
 version = rootProject.ext.hunter_version
 group = rootProject.ext.hunter_library_group
 
@@ -9,7 +8,6 @@ def repoPath = props.get('hunter.repo.path')
 def repoUrl = props.get('hunter.repo.url')
 def licenseUrl = props.get('hunter.license.url')
 def licenseName = props.get('hunter.license.name')
-
 
 android {
     compileSdkVersion 29
@@ -89,4 +87,5 @@ if (is_local) {
             }
         }
     }
+
 }

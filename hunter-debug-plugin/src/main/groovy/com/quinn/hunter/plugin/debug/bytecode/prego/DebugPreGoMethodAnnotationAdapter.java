@@ -24,7 +24,7 @@ public class DebugPreGoMethodAnnotationAdapter extends AnnotationVisitor {
         } else if ("logLevel".equals(name)) {
             method.setLogLevel((int) value);
         } else if ("debugArguments".equals(name)) {
-            method.setDebugArguments((boolean) value);
+            method.setDebugArguments((int) value);
         }
 
         super.visit(name, value);

@@ -10,11 +10,12 @@ def repoUrl = props.get('hunter.repo.url')
 def licenseUrl = props.get('hunter.license.url')
 def licenseName = props.get('hunter.license.name')
 
+
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation 'com.android.tools.build:gradle:4.1.0'
-    implementation 'com.android.tools.build:gradle-api:4.1.0'
+    implementation 'com.android.tools.build:gradle:4.1.3'
+    implementation 'com.android.tools.build:gradle-api:4.1.3'
     //noinspection GradleDependency
     implementation "org.ow2.asm:asm:${asm_version}"
     //noinspection GradleDependency
@@ -87,5 +88,4 @@ if (is_local) {
         tests = false
         javadoc = true
     }
-
 }

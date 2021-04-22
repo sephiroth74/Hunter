@@ -262,5 +262,5 @@ public abstract class HunterTransform extends Transform {
 
     protected abstract int getLogLevel();
 
-    protected abstract boolean getDebugArguments();
+    protected abstract int getDebugArguments();
 }

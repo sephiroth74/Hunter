@@ -1,8 +1,7 @@
 package com.hunter.library.debug;
 
-import java.lang.*;
-import java.util.Arrays;
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class ParameterPrinter {
@@ -15,15 +14,17 @@ public class ParameterPrinter {
 
     private String tag;
 
-    private boolean printArguments = true;
+    private int printArguments = Constants.ARGUMENTS_FULL;
 
-    public ParameterPrinter(String tag, String methodName, boolean printArguments) {
+    public ParameterPrinter(String tag, String methodName, int printArguments) {
         this.tag = tag;
         this.methodName = methodName;
         this.printArguments = printArguments;
     }
 
     public ParameterPrinter append(String name, int val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -32,6 +33,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, boolean val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -40,6 +43,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, short val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -48,6 +53,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, byte val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -56,6 +63,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, char val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -64,6 +73,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, long val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -72,6 +83,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, double val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -80,6 +93,8 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, float val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
@@ -88,35 +103,43 @@ public class ParameterPrinter {
     }
 
     public ParameterPrinter append(String name, Object val) {
+        if (printArguments == Constants.ARGUMENTS_NONE) return this;
+
         if (paramIndex++ != 0) {
             paramsList.append(divider);
         }
-        if (val != null && val.getClass().isArray()) {
-            if (printArguments) {
-                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
-            } else {
-                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToHashCode(val)));
+
+        if (null != val) {
+            if (printArguments == Constants.ARGUMENTS_FULL) {
+                if (val.getClass().isArray()) {
+                    paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToString(val)));
+                } else {
+                    paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+                }
+            } else if (printArguments == Constants.ARGUMENTS_SHORT) {
+                if (val.getClass().isArray()) {
+                    paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToHashCode(val)));
+                } else if (val instanceof String) {
+                    paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
+                } else {
+                    paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, objectToHashCode(val)));
+                }
             }
-        } else if (val != null && val instanceof String) {
-            paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
         } else {
-            if (printArguments) {
-                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
-            } else {
-                paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, objectToHashCode(val)));
-            }
+            paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, "null"));
         }
+
         return this;
     }
 
     static String objectToHashCode(Object val) {
-        if(val == null) return "null";
+        if (val == null) return "null";
         return val.getClass().getName() + "#" + System.identityHashCode(val);
     }
 
     static String arrayToHashCode(Object val) {
-        if(val == null) return "null";
-        return val.getClass().getName() + "#" + System.identityHashCode(val) + "[size=" + Array.getLength(val) + "]";
+        if (val == null) return "null";
+        return val.getClass().getCanonicalName() + "[size=" + Array.getLength(val) + "]";
     }
 
     private String arrayToString(Object val) {
