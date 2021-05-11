@@ -119,7 +119,7 @@ public class ParameterPrinter {
             } else if (printArguments == Constants.ARGUMENTS_SHORT) {
                 if (val.getClass().isArray()) {
                     paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, arrayToHashCode(val)));
-                } else if (val instanceof String) {
+                } else if (val instanceof String || val instanceof Enum) {
                     paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, val));
                 } else {
                     paramsList.append(String.format(Constants.PARAMETER_PRINT_FORMAT, name, objectToHashCode(val)));

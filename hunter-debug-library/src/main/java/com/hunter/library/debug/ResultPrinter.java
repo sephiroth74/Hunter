@@ -46,7 +46,7 @@ public class ResultPrinter {
                 } else if (printArguments == Constants.ARGUMENTS_SHORT) {
                     HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, ParameterPrinter.arrayToHashCode(returnVal));
                 }
-            } else if (returnVal instanceof String) {
+            } else if (returnVal instanceof String || returnVal instanceof Enum) {
                 HunterLoggerHandler.DEFAULT_IMPL.logExit(level, className, methodName, costedMillis, returnVal + "");
             } else {
                 if (printArguments == Constants.ARGUMENTS_FULL) {
